@@ -1,21 +1,17 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { toast } from "sonner";
 
-import {
-  Coins,
-  Command,
-  Frame as FrameIcon,
-  LifeBuoy,
-  Map as MapIcon,
-  PieChart as PieChartIcon,
-  Plus,
-  Send,
-} from "lucide-react";
+import { Coins, Command, LifeBuoy, Plus, Send } from "lucide-react";
 
 import { NavProjects } from "@/components/nav-projects";
+import { NavProjectsSkeleton } from "@/components/loader-skeletons/nav-projects-skeleton";
 import { NavSecondary } from "@/components/nav-secondary";
 import { NavUser } from "@/components/nav-user";
+import { useCreateProject, useProjects } from "@/hooks/queries/projects";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -37,49 +33,65 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 
-const data = {
-  user: {
-    name: "shadcn",
-    email: "m@example.com",
-    avatar: "/avatars/shadcn.jpg",
+const secondaryNavItems = [
+  {
+    title: "Credits",
+    url: "/credits",
+    icon: Coins,
   },
-  navSecondary: [
-    {
-      title: "Credits",
-      url: "/credits",
-      icon: Coins,
-    },
-    {
-      title: "Support",
-      url: "/support",
-      icon: LifeBuoy,
-    },
-    {
-      title: "Feedback",
-      url: "/feedback",
-      icon: Send,
-    },
-  ],
-  projects: [
-    {
-      name: "Design Engineering",
-      url: "/projects/design-engineering",
-      icon: FrameIcon,
-    },
-    {
-      name: "Sales & Marketing",
-      url: "/projects/sales-marketing",
-      icon: PieChartIcon,
-    },
-    {
-      name: "Travel",
-      url: "/projects/travel",
-      icon: MapIcon,
-    },
-  ],
-};
+  {
+    title: "Support",
+    url: "/support",
+    icon: LifeBuoy,
+  },
+  {
+    title: "Feedback",
+    url: "/feedback",
+    icon: Send,
+  },
+];
 
 export function AppSidebar({ ...props }) {
+  const router = useRouter();
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [projectName, setProjectName] = useState("");
+
+  const {
+    data: projects = [],
+    isLoading: projectsLoading,
+  } = useProjects();
+
+  const { mutateAsync: createProject, isPending: isCreating } = useCreateProject();
+
+  const handleDialogChange = (open) => {
+    setDialogOpen(open);
+    if (!open) {
+      setProjectName("");
+    }
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    const trimmedName = projectName.trim();
+
+    if (!trimmedName) {
+      toast.error("Project name is required");
+      return;
+    }
+
+    try {
+      const created = await createProject({ name: trimmedName });
+      setProjectName("");
+      handleDialogChange(false);
+      if (created?.id) {
+        router.push(`/projects/${created.id}`);
+      }
+    } catch (error) {
+      console.error("[AppSidebar] create project failed", error);
+      // Error toast handled in mutation hook
+    }
+  };
+
   return (
     <Sidebar variant="inset" {...props}>
       <SidebarHeader>
@@ -101,7 +113,7 @@ export function AppSidebar({ ...props }) {
       </SidebarHeader>
       <SidebarContent>
         <div className="px-4 pb-2">
-          <Dialog>
+          <Dialog open={dialogOpen} onOpenChange={handleDialogChange}>
             <DialogTrigger asChild>
               <Button className="w-full" variant="default">
                 <Plus className="size-4" />
@@ -109,30 +121,41 @@ export function AppSidebar({ ...props }) {
               </Button>
             </DialogTrigger>
             <DialogContent>
-              <DialogHeader>
-                <DialogTitle>Create a new project</DialogTitle>
-                <DialogDescription>
-                  Name your project to get started with a fresh workspace.
-                </DialogDescription>
-              </DialogHeader>
-              <div className="space-y-2">
-                <label className="font-medium text-sm" htmlFor="project-name">
-                  Project name
-                </label>
-                <Input id="project-name" placeholder="Enter project name" />
-              </div>
-              <DialogFooter>
-                <Button asChild>
-                  <Link href="/projects/new">
-                    Create &amp; Go to the project
-                  </Link>
-                </Button>
-              </DialogFooter>
+              <form className="space-y-4" onSubmit={handleSubmit}>
+                <DialogHeader>
+                  <DialogTitle>Create a new project</DialogTitle>
+                  <DialogDescription>
+                    Name your project to get started with a fresh workspace.
+                  </DialogDescription>
+                </DialogHeader>
+                <div className="space-y-2">
+                  <label className="font-medium text-sm" htmlFor="project-name">
+                    Project name
+                  </label>
+                  <Input
+                    autoFocus
+                    id="project-name"
+                    onChange={(event) => setProjectName(event.target.value)}
+                    placeholder="Enter project name"
+                    value={projectName}
+                    disabled={isCreating}
+                  />
+                </div>
+                <DialogFooter>
+                  <Button className="w-full" disabled={isCreating} type="submit">
+                    {isCreating ? "Creating..." : "Create & Go to the project"}
+                  </Button>
+                </DialogFooter>
+              </form>
             </DialogContent>
           </Dialog>
         </div>
-        <NavProjects projects={data.projects} />
-        <NavSecondary className="mt-auto" items={data.navSecondary} />
+        {projectsLoading ? (
+          <NavProjectsSkeleton />
+        ) : (
+          <NavProjects projects={projects} />
+        )}
+        <NavSecondary className="mt-auto" items={secondaryNavItems} />
       </SidebarContent>
       <SidebarFooter>
         <NavUser />

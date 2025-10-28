@@ -1,5 +1,6 @@
 "use client"
 
+import Link from "next/link";
 import { Folder, MoreHorizontal, Share, Trash2 } from "lucide-react";
 
 import {
@@ -28,48 +29,63 @@ export function NavProjects({
     <SidebarGroup className="group-data-[collapsible=icon]:hidden">
       <SidebarGroupLabel>Projects</SidebarGroupLabel>
       <SidebarMenu>
-        {projects.map((item) => (
-          <SidebarMenuItem key={item.name}>
-            <SidebarMenuButton asChild>
-              <a href={item.url}>
-                <item.icon />
-                <span>{item.name}</span>
-              </a>
+        {projects.length === 0 ? (
+          <SidebarMenuItem>
+            <SidebarMenuButton disabled>
+              <span className="text-muted-foreground">No projects yet</span>
             </SidebarMenuButton>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <SidebarMenuAction showOnHover>
-                  <MoreHorizontal />
-                  <span className="sr-only">More</span>
-                </SidebarMenuAction>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent
-                className="w-48"
-                side={isMobile ? "bottom" : "right"}
-                align={isMobile ? "end" : "start"}>
-                <DropdownMenuItem>
-                  <Folder className="text-muted-foreground" />
-                  <span>View Project</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <Share className="text-muted-foreground" />
-                  <span>Share Project</span>
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem>
-                  <Trash2 className="text-muted-foreground" />
-                  <span>Delete Project</span>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
           </SidebarMenuItem>
-        ))}
-        <SidebarMenuItem>
-          <SidebarMenuButton>
-            <MoreHorizontal />
-            <span>More</span>
-          </SidebarMenuButton>
-        </SidebarMenuItem>
+        ) : (
+          projects.map((item) => {
+            const Icon = item.icon ?? Folder;
+            const href = item.url ?? (item.id ? `/projects/${item.id}` : "#");
+
+            return (
+              <SidebarMenuItem key={item.id ?? item.name}>
+                <SidebarMenuButton asChild>
+                  <Link href={href}>
+                    <Icon />
+                    <span>{item.name}</span>
+                  </Link>
+                </SidebarMenuButton>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <SidebarMenuAction showOnHover>
+                      <MoreHorizontal />
+                      <span className="sr-only">More</span>
+                    </SidebarMenuAction>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent
+                    className="w-48"
+                    side={isMobile ? "bottom" : "right"}
+                    align={isMobile ? "end" : "start"}>
+                    <DropdownMenuItem>
+                      <Folder className="text-muted-foreground" />
+                      <span>View Project</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem>
+                      <Share className="text-muted-foreground" />
+                      <span>Share Project</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem>
+                      <Trash2 className="text-muted-foreground" />
+                      <span>Delete Project</span>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </SidebarMenuItem>
+            );
+          })
+        )}
+        {projects.length > 0 && (
+          <SidebarMenuItem>
+            <SidebarMenuButton>
+              <MoreHorizontal />
+              <span>More</span>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        )}
       </SidebarMenu>
     </SidebarGroup>
   );
