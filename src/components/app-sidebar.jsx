@@ -1,13 +1,14 @@
 "use client"
 
-import * as React from "react"
+import Link from "next/link"
 import {
   Command,
-  Frame,
+  Frame as FrameIcon,
   LifeBuoy,
-  Map,
-  PieChart,
+  Map as MapIcon,
+  PieChart as PieChartIcon,
   Send,
+  Coins,
 } from "lucide-react"
 
 import { NavProjects } from "@/components/nav-projects"
@@ -31,31 +32,36 @@ const data = {
   },
   navSecondary: [
     {
+      title: "Credits",
+      url: "/credits",
+      icon: Coins,
+    },
+    {
       title: "Support",
-      url: "#",
+      url: "/support",
       icon: LifeBuoy,
     },
     {
       title: "Feedback",
-      url: "#",
+      url: "/feedback",
       icon: Send,
     },
   ],
   projects: [
     {
       name: "Design Engineering",
-      url: "#",
-      icon: Frame,
+      url: "/projects/design-engineering",
+      icon: FrameIcon,
     },
     {
       name: "Sales & Marketing",
-      url: "#",
-      icon: PieChart,
+      url: "/projects/sales-marketing",
+      icon: PieChartIcon,
     },
     {
       name: "Travel",
-      url: "#",
-      icon: Map,
+      url: "/projects/travel",
+      icon: MapIcon,
     },
   ],
 }
@@ -69,7 +75,7 @@ export function AppSidebar({
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
-              <a href="#">
+              <Link href="/">
                 <div
                   className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
                   <Command className="size-4" />
@@ -78,7 +84,7 @@ export function AppSidebar({
                   <span className="truncate font-medium">Acme Inc</span>
                   <span className="truncate text-xs">Enterprise</span>
                 </div>
-              </a>
+              </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
