@@ -1,5 +1,7 @@
 "use client";
 
+import Link from "next/link";
+
 import {
   Coins,
   Command,
@@ -10,7 +12,6 @@ import {
   Plus,
   Send,
 } from "lucide-react";
-import Link from "next/link";
 
 import { NavProjects } from "@/components/nav-projects";
 import { NavSecondary } from "@/components/nav-secondary";

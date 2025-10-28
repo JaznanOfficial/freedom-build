@@ -5,11 +5,12 @@ import { UserButton, useUser } from "@clerk/nextjs";
 import { ChevronsUpDown } from "lucide-react";
 import { useRef } from "react";
 
+import { NavUserSkeleton } from "@/components/loader-skeletons/nav-user-skeleton";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { SidebarMenu, SidebarMenuItem } from "@/components/ui/sidebar";
 
 export function NavUser() {
-  const { user } = useUser();
+  const { isLoaded, user } = useUser();
   const userButtonRef = useRef(null);
 
   const handleUserButtonClick = () => {
@@ -32,7 +33,19 @@ export function NavUser() {
     }
   };
 
-  if (!user) return null;
+  if (!isLoaded) {
+    return (
+      <SidebarMenu>
+        <SidebarMenuItem>
+          <NavUserSkeleton />
+        </SidebarMenuItem>
+      </SidebarMenu>
+    );
+  }
+
+  if (!user) {
+    return null;
+  }
 
   return (
     <SidebarMenu>
