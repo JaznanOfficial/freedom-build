@@ -73,12 +73,13 @@ export function NavProjects({
                       <span>Edit</span>
                     </DropdownMenuItem>
                     <DropdownMenuItem
+                      variant="destructive"
                       onSelect={(event) => {
                         event.preventDefault();
                         onRequestDelete?.(item);
                       }}
                     >
-                      <Trash2 className="text-muted-foreground" />
+                      <Trash2 />
                       <span>Delete Project</span>
                     </DropdownMenuItem>
                   </DropdownMenuContent>
