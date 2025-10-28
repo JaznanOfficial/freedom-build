@@ -34,6 +34,7 @@ import {
   useCreateProject,
   useDeleteProject,
   useProjects,
+  useUpdateProject,
 } from "@/hooks/queries/projects";
 
 const secondaryNavItems = [
@@ -60,6 +61,9 @@ export function AppSidebar({ ...props }) {
   const [projectName, setProjectName] = useState("");
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [projectPendingDeletion, setProjectPendingDeletion] = useState(null);
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [projectPendingEdit, setProjectPendingEdit] = useState(null);
+  const [editName, setEditName] = useState("");
 
   const {
     data,
@@ -75,6 +79,8 @@ export function AppSidebar({ ...props }) {
     useCreateProject();
   const { mutateAsync: deleteProject, isPending: isDeleting } =
     useDeleteProject();
+  const { mutateAsync: updateProject, isPending: isUpdating } =
+    useUpdateProject();
 
   const handleDialogChange = (open) => {
     setDialogOpen(open);
@@ -83,10 +89,39 @@ export function AppSidebar({ ...props }) {
     }
   };
 
+  const handleRequestEdit = (project) => {
+    setProjectPendingEdit(project);
+    setEditName(project?.name ?? "");
+    setEditDialogOpen(true);
+  };
+
+  const handleEditSubmit = async (event) => {
+    event.preventDefault();
+    const trimmed = editName.trim();
+    if (!projectPendingEdit?.id || !trimmed) {
+      toast.error("Project name is required");
+      return;
+    }
+    try {
+      await updateProject({ id: projectPendingEdit.id, name: trimmed });
+      handleEditDialogChange(false);
+    } catch (_error) {
+      // toast handled in hook
+    }
+  };
+
   const handleDeleteDialogChange = (open) => {
     setDeleteDialogOpen(open);
     if (!open) {
       setProjectPendingDeletion(null);
+    }
+  };
+
+  const handleEditDialogChange = (open) => {
+    setEditDialogOpen(open);
+    if (!open) {
+      setProjectPendingEdit(null);
+      setEditName("");
     }
   };
 
@@ -198,6 +233,7 @@ export function AppSidebar({ ...props }) {
             hasMore={Boolean(hasNextPage)}
             isLoadingMore={isFetchingNextPage}
             onLoadMore={() => fetchNextPage()}
+            onRequestEdit={handleRequestEdit}
             onRequestDelete={handleRequestDelete}
             projects={projects}
           />
@@ -233,6 +269,40 @@ export function AppSidebar({ ...props }) {
               {isDeleting ? "Deleting..." : "Delete"}
             </Button>
           </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={editDialogOpen} onOpenChange={handleEditDialogChange}>
+        <DialogContent>
+          <form className="space-y-4" onSubmit={handleEditSubmit}>
+            <DialogHeader>
+              <DialogTitle>Edit project</DialogTitle>
+              <DialogDescription>Update the project name.</DialogDescription>
+            </DialogHeader>
+            <div className="space-y-2">
+              <label className="font-medium text-sm" htmlFor="edit-project-name">
+                Project name
+              </label>
+              <Input
+                id="edit-project-name"
+                value={editName}
+                disabled={isUpdating}
+                onChange={(e) => setEditName(e.target.value)}
+                placeholder="Enter project name"
+                autoFocus
+              />
+            </div>
+            <DialogFooter>
+              <DialogClose asChild>
+                <Button variant="outline" disabled={isUpdating} type="button">
+                  Cancel
+                </Button>
+              </DialogClose>
+              <Button disabled={isUpdating} type="submit">
+                {isUpdating ? "Saving..." : "Save"}
+              </Button>
+            </DialogFooter>
+          </form>
         </DialogContent>
       </Dialog>
     </Sidebar>

@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link";
-import { Folder, Loader2, MoreHorizontal, Trash2 } from "lucide-react";
+import { Folder, Loader2, MoreHorizontal, Pencil, Trash2 } from "lucide-react";
 
 import {
   DropdownMenu,
@@ -24,6 +24,7 @@ export function NavProjects({
   hasMore,
   onLoadMore,
   isLoadingMore,
+  onRequestEdit,
   onRequestDelete,
 }) {
   const { isMobile } = useSidebar()
@@ -62,6 +63,15 @@ export function NavProjects({
                     className="w-48"
                     side={isMobile ? "bottom" : "right"}
                     align={isMobile ? "end" : "start"}>
+                    <DropdownMenuItem
+                      onSelect={(event) => {
+                        event.preventDefault();
+                        onRequestEdit?.(item);
+                      }}
+                    >
+                      <Pencil className="text-muted-foreground" />
+                      <span>Edit</span>
+                    </DropdownMenuItem>
                     <DropdownMenuItem
                       onSelect={(event) => {
                         event.preventDefault();

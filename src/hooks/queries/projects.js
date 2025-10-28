@@ -19,6 +19,21 @@ async function handleResponse(response) {
   return body;
 }
 
+async function updateProject({ id, name }) {
+  const response = await fetch(`/api/projects/${id}`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ name }),
+  });
+
+  const body = await handleResponse(response);
+  return body?.data;
+}
+
+ 
+
 async function fetchProjects({ pageParam = 1 }) {
   const response = await fetch(
     `/api/projects?page=${pageParam}&limit=${PROJECTS_PAGE_SIZE}`,
@@ -36,6 +51,21 @@ export function useProjects() {
     queryFn: ({ pageParam }) => fetchProjects({ pageParam }),
     initialPageParam: 1,
     getNextPageParam: (lastPage) => lastPage?.meta?.nextPage ?? undefined,
+  });
+}
+
+export function useUpdateProject() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: updateProject,
+    onSuccess() {
+      toast.success("Project updated successfully");
+      queryClient.invalidateQueries({ queryKey: PROJECTS_QUERY_KEY });
+    },
+    onError(error) {
+      toast.error(error.message || "Failed to update project");
+    },
   });
 }
 
