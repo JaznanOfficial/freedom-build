@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link";
-import { Folder, MoreHorizontal, Share, Trash2 } from "lucide-react";
+import { Folder, Loader2, MoreHorizontal, Share, Trash2 } from "lucide-react";
 
 import {
   DropdownMenu,
@@ -20,9 +20,7 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar"
 
-export function NavProjects({
-  projects
-}) {
+export function NavProjects({ projects, hasMore, onLoadMore, isLoadingMore }) {
   const { isMobile } = useSidebar()
 
   return (
@@ -78,11 +76,11 @@ export function NavProjects({
             );
           })
         )}
-        {projects.length > 0 && (
+        {hasMore && (
           <SidebarMenuItem>
-            <SidebarMenuButton>
-              <MoreHorizontal />
-              <span>More</span>
+            <SidebarMenuButton onClick={onLoadMore} disabled={isLoadingMore}>
+              {isLoadingMore ? <Loader2 className="animate-spin" /> : <MoreHorizontal />}
+              <span>{isLoadingMore ? "Loading more" : "More"}</span>
             </SidebarMenuButton>
           </SidebarMenuItem>
         )}

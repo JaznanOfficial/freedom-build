@@ -57,9 +57,14 @@ export function AppSidebar({ ...props }) {
   const [projectName, setProjectName] = useState("");
 
   const {
-    data: projects = [],
+    data,
     isLoading: projectsLoading,
+    isFetchingNextPage,
+    hasNextPage,
+    fetchNextPage,
   } = useProjects();
+
+  const projects = data?.pages.flatMap((page) => page?.data ?? []) ?? [];
 
   const { mutateAsync: createProject, isPending: isCreating } = useCreateProject();
 
@@ -153,7 +158,12 @@ export function AppSidebar({ ...props }) {
         {projectsLoading ? (
           <NavProjectsSkeleton />
         ) : (
-          <NavProjects projects={projects} />
+          <NavProjects
+            projects={projects}
+            hasMore={Boolean(hasNextPage)}
+            onLoadMore={() => fetchNextPage()}
+            isLoadingMore={isFetchingNextPage}
+          />
         )}
         <NavSecondary className="mt-auto" items={secondaryNavItems} />
       </SidebarContent>

@@ -1,9 +1,14 @@
 "use client";
 
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  useInfiniteQuery,
+  useMutation,
+  useQueryClient,
+} from "@tanstack/react-query";
 import { toast } from "sonner";
 
 const PROJECTS_QUERY_KEY = ["projects"];
+const PROJECTS_PAGE_SIZE = 10;
 
 async function handleResponse(response) {
   const body = await response.json().catch(() => ({}));
@@ -11,21 +16,26 @@ async function handleResponse(response) {
     const message = body?.error || "Something went wrong";
     throw new Error(message);
   }
-  return body?.data;
+  return body;
 }
 
-async function fetchProjects() {
-  const response = await fetch("/api/projects", {
-    method: "GET",
-    cache: "no-store",
-  });
+async function fetchProjects({ pageParam = 1 }) {
+  const response = await fetch(
+    `/api/projects?page=${pageParam}&limit=${PROJECTS_PAGE_SIZE}`,
+    {
+      method: "GET",
+      cache: "no-store",
+    },
+  );
   return handleResponse(response);
 }
 
 export function useProjects() {
-  return useQuery({
+  return useInfiniteQuery({
     queryKey: PROJECTS_QUERY_KEY,
-    queryFn: fetchProjects,
+    queryFn: ({ pageParam }) => fetchProjects({ pageParam }),
+    initialPageParam: 1,
+    getNextPageParam: (lastPage) => lastPage?.meta?.nextPage ?? undefined,
   });
 }
 
@@ -38,7 +48,8 @@ async function createProject(payload) {
     body: JSON.stringify(payload),
   });
 
-  return handleResponse(response);
+  const body = await handleResponse(response);
+  return body?.data;
 }
 
 export function useCreateProject() {
