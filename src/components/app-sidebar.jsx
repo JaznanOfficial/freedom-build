@@ -226,11 +226,11 @@ export function AppSidebar({ ...props }) {
             </DialogContent>
           </Dialog>
         </div>
-        <div className="flex-1 min-h-0 overflow-hidden">
+        <div className="min-h-0 flex-1 overflow-hidden">
           {projectsLoading ? (
             <NavProjectsSkeleton />
           ) : (
-            <div className="h-full overflow-auto pr-1">
+            <div className="h-full overflow-auto pr-1 scrollbar-thin">
               <NavProjects
                 hasMore={Boolean(hasNextPage)}
                 isLoadingMore={isFetchingNextPage}
