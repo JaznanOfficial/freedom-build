@@ -9,12 +9,23 @@ import {
   PieChart as PieChartIcon,
   Send,
   Coins,
+  Plus,
 } from "lucide-react"
 
 import { NavProjects } from "@/components/nav-projects"
 import { NavSecondary } from "@/components/nav-secondary"
 import { NavUser } from "@/components/nav-user"
 import { Button } from "@/components/ui/button"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogFooter,
+} from "@/components/ui/dialog"
+import { Input } from "@/components/ui/input"
 import {
   Sidebar,
   SidebarContent,
@@ -92,9 +103,33 @@ export function AppSidebar({
       </SidebarHeader>
       <SidebarContent>
         <div className="px-4 pb-2">
-          <Button asChild className="w-full">
-            <Link href="/projects/create">Create Project</Link>
-          </Button>
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button className="w-full" variant="default">
+                <Plus className="size-4" />
+                <span>Create Project</span>
+              </Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Create a new project</DialogTitle>
+                <DialogDescription>
+                  Name your project to get started with a fresh workspace.
+                </DialogDescription>
+              </DialogHeader>
+              <div className="space-y-2">
+                <label className="text-sm font-medium" htmlFor="project-name">
+                  Project name
+                </label>
+                <Input id="project-name" placeholder="Enter project name" />
+              </div>
+              <DialogFooter>
+                <Button asChild>
+                  <Link href="/projects/new">Create &amp; Go to the project</Link>
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
         </div>
         <NavProjects projects={data.projects} />
         <NavSecondary items={data.navSecondary} className="mt-auto" />
