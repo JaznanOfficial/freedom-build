@@ -1,14 +1,14 @@
-"use client"
+"use client";
 
-import Link from "next/link";
 import { Folder, Loader2, MoreHorizontal, Pencil, Trash2 } from "lucide-react";
+import Link from "next/link";
 
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from "@/components/ui/dropdown-menu";
 import {
   SidebarGroup,
   SidebarGroupLabel,
@@ -17,7 +17,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   useSidebar,
-} from "@/components/ui/sidebar"
+} from "@/components/ui/sidebar";
 
 export function NavProjects({
   projects,
@@ -27,7 +27,7 @@ export function NavProjects({
   onRequestEdit,
   onRequestDelete,
 }) {
-  const { isMobile } = useSidebar()
+  const { isMobile } = useSidebar();
 
   return (
     <SidebarGroup className="group-data-[collapsible=icon]:hidden">
@@ -54,15 +54,19 @@ export function NavProjects({
                 </SidebarMenuButton>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <SidebarMenuAction showOnHover>
-                      <MoreHorizontal />
+                    <SidebarMenuAction
+                      showOnHover
+                      className="bg-sidebar-primary text-secondary hover:bg-sidebar-primary hover:text-secondary peer-hover/menu-button:text-secondary"
+                    >
+                      <MoreHorizontal className="text-secondary" />
                       <span className="sr-only">More</span>
                     </SidebarMenuAction>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent
+                    align={isMobile ? "end" : "start"}
                     className="w-48"
                     side={isMobile ? "bottom" : "right"}
-                    align={isMobile ? "end" : "start"}>
+                  >
                     <DropdownMenuItem
                       onSelect={(event) => {
                         event.preventDefault();
@@ -73,11 +77,11 @@ export function NavProjects({
                       <span>Edit</span>
                     </DropdownMenuItem>
                     <DropdownMenuItem
-                      variant="destructive"
                       onSelect={(event) => {
                         event.preventDefault();
                         onRequestDelete?.(item);
                       }}
+                      variant="destructive"
                     >
                       <Trash2 />
                       <span>Delete Project</span>
@@ -90,8 +94,12 @@ export function NavProjects({
         )}
         {hasMore && (
           <SidebarMenuItem>
-            <SidebarMenuButton onClick={onLoadMore} disabled={isLoadingMore}>
-              {isLoadingMore ? <Loader2 className="animate-spin" /> : <MoreHorizontal />}
+            <SidebarMenuButton disabled={isLoadingMore} onClick={onLoadMore}>
+              {isLoadingMore ? (
+                <Loader2 className="animate-spin" />
+              ) : (
+                <MoreHorizontal />
+              )}
               <span>{isLoadingMore ? "Loading more" : "More"}</span>
             </SidebarMenuButton>
           </SidebarMenuItem>

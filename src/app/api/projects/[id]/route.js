@@ -35,7 +35,7 @@ export async function GET(_request, { params }) {
   } catch (_error) {
     return NextResponse.json(
       { error: "Failed to fetch project" },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }
@@ -48,7 +48,7 @@ export async function PATCH(request, { params }) {
     if (!name) {
       return NextResponse.json(
         { error: "Project name is required" },
-        { status: 400 },
+        { status: 400 }
       );
     }
 
@@ -61,7 +61,7 @@ export async function PATCH(request, { params }) {
     const updated = await ProjectModel.findByIdAndUpdate(
       id,
       { name },
-      { new: true },
+      { new: true }
     );
 
     if (!updated) {
@@ -72,7 +72,7 @@ export async function PATCH(request, { params }) {
   } catch (_error) {
     return NextResponse.json(
       { error: "Failed to update project" },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }
@@ -96,7 +96,7 @@ export async function DELETE(_request, { params }) {
   } catch (_error) {
     return NextResponse.json(
       { error: "Failed to delete project" },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }
