@@ -1,31 +1,31 @@
-"use client"
+"use client";
 
-import Link from "next/link"
 import {
+  Coins,
   Command,
   Frame as FrameIcon,
   LifeBuoy,
   Map as MapIcon,
   PieChart as PieChartIcon,
-  Send,
-  Coins,
   Plus,
-} from "lucide-react"
+  Send,
+} from "lucide-react";
+import Link from "next/link";
 
-import { NavProjects } from "@/components/nav-projects"
-import { NavSecondary } from "@/components/nav-secondary"
-import { NavUser } from "@/components/nav-user"
-import { Button } from "@/components/ui/button"
+import { NavProjects } from "@/components/nav-projects";
+import { NavSecondary } from "@/components/nav-secondary";
+import { NavUser } from "@/components/nav-user";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-  DialogFooter,
-} from "@/components/ui/dialog"
-import { Input } from "@/components/ui/input"
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
 import {
   Sidebar,
   SidebarContent,
@@ -34,7 +34,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from "@/components/ui/sidebar"
+} from "@/components/ui/sidebar";
 
 const data = {
   user: {
@@ -76,20 +76,17 @@ const data = {
       icon: MapIcon,
     },
   ],
-}
+};
 
-export function AppSidebar({
-  ...props
-}) {
+export function AppSidebar({ ...props }) {
   return (
     <Sidebar variant="inset" {...props}>
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton size="lg" asChild>
+            <SidebarMenuButton asChild size="lg">
               <Link href="/">
-                <div
-                  className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
+                <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
                   <Command className="size-4" />
                 </div>
                 <div className="grid flex-1 text-left text-sm leading-tight">
@@ -118,24 +115,26 @@ export function AppSidebar({
                 </DialogDescription>
               </DialogHeader>
               <div className="space-y-2">
-                <label className="text-sm font-medium" htmlFor="project-name">
+                <label className="font-medium text-sm" htmlFor="project-name">
                   Project name
                 </label>
                 <Input id="project-name" placeholder="Enter project name" />
               </div>
               <DialogFooter>
                 <Button asChild>
-                  <Link href="/projects/new">Create &amp; Go to the project</Link>
+                  <Link href="/projects/new">
+                    Create &amp; Go to the project
+                  </Link>
                 </Button>
               </DialogFooter>
             </DialogContent>
           </Dialog>
         </div>
         <NavProjects projects={data.projects} />
-        <NavSecondary items={data.navSecondary} className="mt-auto" />
+        <NavSecondary className="mt-auto" items={data.navSecondary} />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={data.user} />
+        <NavUser />
       </SidebarFooter>
     </Sidebar>
   );
