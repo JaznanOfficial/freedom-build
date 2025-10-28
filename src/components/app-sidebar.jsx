@@ -226,18 +226,22 @@ export function AppSidebar({ ...props }) {
             </DialogContent>
           </Dialog>
         </div>
-        {projectsLoading ? (
-          <NavProjectsSkeleton />
-        ) : (
-          <NavProjects
-            hasMore={Boolean(hasNextPage)}
-            isLoadingMore={isFetchingNextPage}
-            onLoadMore={() => fetchNextPage()}
-            onRequestEdit={handleRequestEdit}
-            onRequestDelete={handleRequestDelete}
-            projects={projects}
-          />
-        )}
+        <div className="flex-1 min-h-0 overflow-hidden">
+          {projectsLoading ? (
+            <NavProjectsSkeleton />
+          ) : (
+            <div className="h-full overflow-auto pr-1">
+              <NavProjects
+                hasMore={Boolean(hasNextPage)}
+                isLoadingMore={isFetchingNextPage}
+                onLoadMore={() => fetchNextPage()}
+                onRequestEdit={handleRequestEdit}
+                onRequestDelete={handleRequestDelete}
+                projects={projects}
+              />
+            </div>
+          )}
+        </div>
         <NavSecondary className="mt-auto" items={secondaryNavItems} />
       </SidebarContent>
       <SidebarFooter>
