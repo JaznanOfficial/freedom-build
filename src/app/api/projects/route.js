@@ -15,7 +15,7 @@ function formatProject(doc) {
 export async function GET(request) {
   try {
     const url = new URL(request.url);
-    const limitParam = Number.parseInt(url.searchParams.get("limit") ?? "", 2);
+    const limitParam = Number.parseInt(url.searchParams.get("limit") ?? "", 10);
     const pageParam = Number.parseInt(url.searchParams.get("page") ?? "", 10);
 
     const limit = Number.isNaN(limitParam)

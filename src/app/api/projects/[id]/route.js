@@ -1,7 +1,7 @@
+import mongoose from "mongoose";
 import { NextResponse } from "next/server";
-
-import { connectMongoose } from "@/lib/db/mongoose";
 import { ProjectModel } from "@/lib/db/models/project";
+import { connectMongoose } from "@/lib/db/mongoose";
 
 function formatProject(doc) {
   const { _id, ...rest } = doc.toObject({ versionKey: false });
@@ -10,6 +10,9 @@ function formatProject(doc) {
 
 async function getProjectOr404(id) {
   await connectMongoose();
+  if (!mongoose.isValidObjectId(id)) {
+    return null;
+  }
   const project = await ProjectModel.findById(id);
 
   if (!project) {
@@ -21,15 +24,15 @@ async function getProjectOr404(id) {
 
 export async function GET(_request, { params }) {
   try {
-    const project = await getProjectOr404(params.id);
+    const { id } = await params;
+    const project = await getProjectOr404(id);
 
     if (!project) {
       return NextResponse.json({ error: "Project not found" }, { status: 404 });
     }
 
     return NextResponse.json({ data: formatProject(project) }, { status: 200 });
-  } catch (error) {
-    console.error("[projects/:id.GET]", error);
+  } catch (_error) {
     return NextResponse.json(
       { error: "Failed to fetch project" },
       { status: 500 },
@@ -50,9 +53,13 @@ export async function PATCH(request, { params }) {
     }
 
     await connectMongoose();
+    const { id } = await params;
+    if (!mongoose.isValidObjectId(id)) {
+      return NextResponse.json({ error: "Project not found" }, { status: 404 });
+    }
 
     const updated = await ProjectModel.findByIdAndUpdate(
-      params.id,
+      id,
       { name },
       { new: true },
     );
@@ -62,8 +69,7 @@ export async function PATCH(request, { params }) {
     }
 
     return NextResponse.json({ data: formatProject(updated) }, { status: 200 });
-  } catch (error) {
-    console.error("[projects/:id.PATCH]", error);
+  } catch (_error) {
     return NextResponse.json(
       { error: "Failed to update project" },
       { status: 500 },
@@ -75,15 +81,19 @@ export async function DELETE(_request, { params }) {
   try {
     await connectMongoose();
 
-    const result = await ProjectModel.findByIdAndDelete(params.id);
+    const { id } = await params;
+    if (!mongoose.isValidObjectId(id)) {
+      return NextResponse.json({ error: "Project not found" }, { status: 404 });
+    }
+
+    const result = await ProjectModel.findByIdAndDelete(id);
 
     if (!result) {
       return NextResponse.json({ error: "Project not found" }, { status: 404 });
     }
 
     return NextResponse.json({ success: true }, { status: 200 });
-  } catch (error) {
-    console.error("[projects/:id.DELETE]", error);
+  } catch (_error) {
     return NextResponse.json(
       { error: "Failed to delete project" },
       { status: 500 },

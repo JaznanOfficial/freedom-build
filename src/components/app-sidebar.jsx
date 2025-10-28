@@ -1,20 +1,18 @@
 "use client";
 
+import { Coins, Command, LifeBuoy, Plus, Send } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
-
-import { Coins, Command, LifeBuoy, Plus, Send } from "lucide-react";
-
-import { NavProjects } from "@/components/nav-projects";
 import { NavProjectsSkeleton } from "@/components/loader-skeletons/nav-projects-skeleton";
+import { NavProjects } from "@/components/nav-projects";
 import { NavSecondary } from "@/components/nav-secondary";
 import { NavUser } from "@/components/nav-user";
-import { useCreateProject, useProjects } from "@/hooks/queries/projects";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
   DialogFooter,
@@ -32,6 +30,11 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
+import {
+  useCreateProject,
+  useDeleteProject,
+  useProjects,
+} from "@/hooks/queries/projects";
 
 const secondaryNavItems = [
   {
@@ -55,6 +58,8 @@ export function AppSidebar({ ...props }) {
   const router = useRouter();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [projectName, setProjectName] = useState("");
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [projectPendingDeletion, setProjectPendingDeletion] = useState(null);
 
   const {
     data,
@@ -66,12 +71,22 @@ export function AppSidebar({ ...props }) {
 
   const projects = data?.pages.flatMap((page) => page?.data ?? []) ?? [];
 
-  const { mutateAsync: createProject, isPending: isCreating } = useCreateProject();
+  const { mutateAsync: createProject, isPending: isCreating } =
+    useCreateProject();
+  const { mutateAsync: deleteProject, isPending: isDeleting } =
+    useDeleteProject();
 
   const handleDialogChange = (open) => {
     setDialogOpen(open);
     if (!open) {
       setProjectName("");
+    }
+  };
+
+  const handleDeleteDialogChange = (open) => {
+    setDeleteDialogOpen(open);
+    if (!open) {
+      setProjectPendingDeletion(null);
     }
   };
 
@@ -91,8 +106,25 @@ export function AppSidebar({ ...props }) {
       if (created?.id) {
         router.push(`/projects/${created.id}`);
       }
-    } catch (error) {
-      console.error("[AppSidebar] create project failed", error);
+    } catch (_error) {
+      // Error toast handled in mutation hook
+    }
+  };
+
+  const handleRequestDelete = (project) => {
+    setProjectPendingDeletion(project);
+    setDeleteDialogOpen(true);
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (!projectPendingDeletion?.id) {
+      return;
+    }
+
+    try {
+      await deleteProject(projectPendingDeletion.id);
+      handleDeleteDialogChange(false);
+    } catch (_error) {
       // Error toast handled in mutation hook
     }
   };
@@ -118,7 +150,7 @@ export function AppSidebar({ ...props }) {
       </SidebarHeader>
       <SidebarContent>
         <div className="px-4 pb-2">
-          <Dialog open={dialogOpen} onOpenChange={handleDialogChange}>
+          <Dialog onOpenChange={handleDialogChange} open={dialogOpen}>
             <DialogTrigger asChild>
               <Button className="w-full" variant="default">
                 <Plus className="size-4" />
@@ -139,15 +171,19 @@ export function AppSidebar({ ...props }) {
                   </label>
                   <Input
                     autoFocus
+                    disabled={isCreating}
                     id="project-name"
                     onChange={(event) => setProjectName(event.target.value)}
                     placeholder="Enter project name"
                     value={projectName}
-                    disabled={isCreating}
                   />
                 </div>
                 <DialogFooter>
-                  <Button className="w-full" disabled={isCreating} type="submit">
+                  <Button
+                    className="w-full"
+                    disabled={isCreating}
+                    type="submit"
+                  >
                     {isCreating ? "Creating..." : "Create & Go to the project"}
                   </Button>
                 </DialogFooter>
@@ -159,10 +195,11 @@ export function AppSidebar({ ...props }) {
           <NavProjectsSkeleton />
         ) : (
           <NavProjects
-            projects={projects}
             hasMore={Boolean(hasNextPage)}
-            onLoadMore={() => fetchNextPage()}
             isLoadingMore={isFetchingNextPage}
+            onLoadMore={() => fetchNextPage()}
+            onRequestDelete={handleRequestDelete}
+            projects={projects}
           />
         )}
         <NavSecondary className="mt-auto" items={secondaryNavItems} />
@@ -170,6 +207,34 @@ export function AppSidebar({ ...props }) {
       <SidebarFooter>
         <NavUser />
       </SidebarFooter>
+      <Dialog open={deleteDialogOpen} onOpenChange={handleDeleteDialogChange}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Delete project</DialogTitle>
+            <DialogDescription>
+              This action cannot be undone. This will permanently remove
+              {" "}
+              <strong>{projectPendingDeletion?.name ?? "this project"}</strong>
+              .
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <DialogClose asChild>
+              <Button variant="outline" disabled={isDeleting} type="button">
+                Cancel
+              </Button>
+            </DialogClose>
+            <Button
+              variant="destructive"
+              disabled={isDeleting}
+              onClick={handleDeleteConfirm}
+              type="button"
+            >
+              {isDeleting ? "Deleting..." : "Delete"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </Sidebar>
   );
 }

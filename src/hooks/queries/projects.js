@@ -67,3 +67,27 @@ export function useCreateProject() {
     },
   });
 }
+
+async function deleteProject(id) {
+  const response = await fetch(`/api/projects/${id}`, {
+    method: "DELETE",
+  });
+
+  await handleResponse(response);
+  return true;
+}
+
+export function useDeleteProject() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: deleteProject,
+    onSuccess() {
+      toast.success("Project deleted successfully");
+      queryClient.invalidateQueries({ queryKey: PROJECTS_QUERY_KEY });
+    },
+    onError(error) {
+      toast.error(error.message || "Failed to delete project");
+    },
+  });
+}

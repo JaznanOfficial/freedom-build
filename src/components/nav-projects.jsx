@@ -1,13 +1,12 @@
 "use client"
 
 import Link from "next/link";
-import { Folder, Loader2, MoreHorizontal, Share, Trash2 } from "lucide-react";
+import { Folder, Loader2, MoreHorizontal, Trash2 } from "lucide-react";
 
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import {
@@ -20,7 +19,13 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar"
 
-export function NavProjects({ projects, hasMore, onLoadMore, isLoadingMore }) {
+export function NavProjects({
+  projects,
+  hasMore,
+  onLoadMore,
+  isLoadingMore,
+  onRequestDelete,
+}) {
   const { isMobile } = useSidebar()
 
   return (
@@ -57,16 +62,12 @@ export function NavProjects({ projects, hasMore, onLoadMore, isLoadingMore }) {
                     className="w-48"
                     side={isMobile ? "bottom" : "right"}
                     align={isMobile ? "end" : "start"}>
-                    <DropdownMenuItem>
-                      <Folder className="text-muted-foreground" />
-                      <span>View Project</span>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem>
-                      <Share className="text-muted-foreground" />
-                      <span>Share Project</span>
-                    </DropdownMenuItem>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem>
+                    <DropdownMenuItem
+                      onSelect={(event) => {
+                        event.preventDefault();
+                        onRequestDelete?.(item);
+                      }}
+                    >
                       <Trash2 className="text-muted-foreground" />
                       <span>Delete Project</span>
                     </DropdownMenuItem>
