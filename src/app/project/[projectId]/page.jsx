@@ -2,6 +2,7 @@ import { LayoutDashboard } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ProjectPageHeader } from "@/components/projects/ProjectPageHeader";
 
 export default async function Page({ params }) {
   const { projectId } = await params;
@@ -22,10 +23,7 @@ export default async function Page({ params }) {
             </Link>
           </Button>
         </div>
-        <div className="space-y-1">
-          <h1 className="font-semibold text-2xl tracking-tight">Project</h1>
-          <p className="text-muted-foreground text-sm">ID: {projectId}</p>
-        </div>
+        <ProjectPageHeader projectId={projectId} />
 
         <Tabs className="w-full" defaultValue="generation">
           <TabsList>

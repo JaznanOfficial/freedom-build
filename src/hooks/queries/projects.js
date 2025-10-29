@@ -3,6 +3,7 @@
 import {
   useInfiniteQuery,
   useMutation,
+  useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
 import { toast } from "sonner";
@@ -51,6 +52,22 @@ export function useProjects() {
     queryFn: ({ pageParam }) => fetchProjects({ pageParam }),
     initialPageParam: 1,
     getNextPageParam: (lastPage) => lastPage?.meta?.nextPage ?? undefined,
+  });
+}
+
+const PROJECT_QUERY_KEY = (id) => ["project", id];
+
+async function fetchProject(id) {
+  const response = await fetch(`/api/projects/${id}`, { method: "GET", cache: "no-store" });
+  const body = await handleResponse(response);
+  return body?.data;
+}
+
+export function useProject(id) {
+  return useQuery({
+    queryKey: PROJECT_QUERY_KEY(id),
+    queryFn: () => fetchProject(id),
+    enabled: Boolean(id),
   });
 }
 
