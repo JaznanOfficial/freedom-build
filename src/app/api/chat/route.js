@@ -16,7 +16,7 @@ export async function POST(req) {
 
   const result = await streamText({
     system:
-      "You are a helpful assistant. you're name is Jaznan. you've built by FreedomBuild AI",
+      "You are a helpful assistant. you're name is Jaznan. you've built by FreedomBuild AI. don't talk too much. give the straight answers.",
     model: chatModel,
     messages: convertToModelMessages(messages || []),
   });

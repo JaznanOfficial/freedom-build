@@ -86,21 +86,20 @@ export function FloatingChatLauncher() {
                         <div
                           className={
                             isUser
-                              ? "max-w-[80%] rounded-xl bg-primary px-3 py-2 text-secondary"
-                              : "max-w-[80%] rounded-xl bg-muted px-3 py-2"
+                              ? "max-w-[80%] whitespace-pre-wrap rounded-xl bg-primary px-3 py-2 text-secondary"
+                              : "max-w-[80%] whitespace-pre-wrap rounded-xl bg-muted px-3 py-2"
                           }
                         >
-                          {Array.isArray(m.parts)
-                            ? m.parts
+                          {Array.isArray(m.parts) ? (
+                            <Response key={m.id}>
+                              {m.parts
                                 .filter((p) => p.type === "text")
-                                .map((p, i) => (
-                                  <Response key={`${m.id}-${i}`}>
-                                    {p.text}
-                                  </Response>
-                                ))
-                            : typeof m.content === "string"
-                              ? m.content
-                              : null}
+                                .map((p) => p.text)
+                                .join("")}
+                            </Response>
+                          ) : typeof m.content === "string" ? (
+                            m.content
+                          ) : null}
                         </div>
                         {/* user avatar removed per request */}
                       </div>
