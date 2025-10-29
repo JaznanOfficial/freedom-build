@@ -42,7 +42,7 @@ export function NavProjects({
         ) : (
           projects.map((item) => {
             const Icon = item.icon ?? Folder;
-            const href = item.url ?? (item.id ? `/projects/${item.id}` : "#");
+            const href = item.url ?? (item.id ? `/project/${item.id}` : "#");
 
             return (
               <SidebarMenuItem key={item.id ?? item.name}>
@@ -55,8 +55,8 @@ export function NavProjects({
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <SidebarMenuAction
-                      showOnHover
                       className="bg-sidebar-primary text-secondary hover:bg-sidebar-primary hover:text-secondary peer-hover/menu-button:text-secondary"
+                      showOnHover
                     >
                       <MoreHorizontal className="text-secondary" />
                       <span className="sr-only">More</span>

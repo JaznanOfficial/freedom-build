@@ -139,7 +139,7 @@ export function AppSidebar({ ...props }) {
       setProjectName("");
       handleDialogChange(false);
       if (created?.id) {
-        router.push(`/projects/${created.id}`);
+        router.push(`/project/${created.id}`);
       }
     } catch (_error) {
       // Error toast handled in mutation hook
