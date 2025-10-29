@@ -94,7 +94,9 @@ export function FloatingChatLauncher() {
                             ? m.parts
                                 .filter((p) => p.type === "text")
                                 .map((p, i) => (
-                                  <Response key={`${m.id}-${i}`}>{p.text}</Response>
+                                  <Response key={`${m.id}-${i}`}>
+                                    {p.text}
+                                  </Response>
                                 ))
                             : typeof m.content === "string"
                               ? m.content
