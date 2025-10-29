@@ -8,13 +8,13 @@ export default async function Page({ params }) {
 
   return (
     <main className="min-h-screen bg-muted/50 p-4 md:p-6">
-      <div className="space-y-6 rounded-xl border bg-background p-4 md:min-h-min md:p-6">
+      <div className="min-h-[calc(100vh-2rem)] space-y-6 rounded-xl border bg-background p-4 md:min-h-[calc(100vh-3rem)] md:p-6">
         <div>
           <Button
             asChild
+            className="gap-2 bg-accent text-accent-foreground hover:bg-accent hover:text-accent-foreground dark:bg-input/50 dark:hover:bg-input/50"
             size="sm"
             variant="outline"
-            className="gap-2 bg-accent text-accent-foreground hover:bg-accent hover:text-accent-foreground dark:bg-input/50 dark:hover:bg-input/50"
           >
             <Link href="/dashboard">
               <LayoutDashboard className="size-4" />
