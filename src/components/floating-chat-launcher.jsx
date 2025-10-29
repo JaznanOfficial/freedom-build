@@ -1,8 +1,9 @@
 "use client";
 
-import { useChat } from "@ai-sdk/react";
 import { MessageCircle } from "lucide-react";
 import { useState } from "react";
+import { useChat } from "@ai-sdk/react";
+import { DefaultChatTransport } from "ai";
 import {
   Conversation,
   ConversationContent,
@@ -23,13 +24,15 @@ import { Input } from "@/components/ui/input";
 export function FloatingChatLauncher() {
   const [open, setOpen] = useState(false);
   const [text, setText] = useState("");
-  const { messages, sendMessage, status } = useChat({ api: "/api/chat" });
+  const { messages, sendMessage, status } = useChat({
+    transport: new DefaultChatTransport({ api: "/api/chat" }),
+  });
 
   function handleSend(e) {
     e.preventDefault();
     const value = text.trim();
     if (!value) return;
-    sendMessage({ text: value });
+    sendMessage({ parts: [{ type: "text", text: value }] });
     setText("");
   }
 
