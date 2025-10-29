@@ -28,8 +28,8 @@ export function FloatingChatLauncher() {
     <>
       {open && (
         <div className="fixed right-4 bottom-20 z-50 w-[min(90vw,28rem)] h-[60vh] max-h-[75vh] md:right-8 md:bottom-24 rounded-lg border bg-card shadow-xl flex flex-col overflow-hidden">
-          <div className="px-4 pt-4">
-            <div className="text-lg font-semibold">AI Assistant</div>
+          <div className="flex h-12 items-center px-4 border-b">
+            <div className="text-lg font-semibold">Jaznan</div>
           </div>
           <div className="mx-4 mb-3 flex min-h-0 flex-1 flex-col overflow-hidden rounded-lg border bg-muted/30">
             <Conversation className="flex-1">
