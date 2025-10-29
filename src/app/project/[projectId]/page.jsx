@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ProjectPageHeader } from "@/components/projects/ProjectPageHeader";
+import { GenerationView } from "@/components/projects/GenerationView";
 
 export default async function Page({ params }) {
   const { projectId } = await params;
@@ -31,14 +32,12 @@ export default async function Page({ params }) {
             <TabsTrigger value="studio">Studio</TabsTrigger>
           </TabsList>
 
-          <div className="mt-3 rounded-lg border p-4">
-            <TabsContent value="generation">
-              <div className="text-muted-foreground text-sm">Generation</div>
-            </TabsContent>
-            <TabsContent value="studio">
-              <div className="text-muted-foreground text-sm">Studio</div>
-            </TabsContent>
-          </div>
+          <TabsContent value="generation" className="mt-3">
+            <GenerationView />
+          </TabsContent>
+          <TabsContent value="studio" className="mt-3">
+            <div className="text-sm text-muted-foreground">Studio</div>
+          </TabsContent>
         </Tabs>
       </div>
     </main>
