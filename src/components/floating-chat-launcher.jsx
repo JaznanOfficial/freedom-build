@@ -9,12 +9,6 @@ import {
   ConversationScrollButton,
 } from "@/components/ai-elements/conversation";
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 
 export function FloatingChatLauncher() {
@@ -32,11 +26,11 @@ export function FloatingChatLauncher() {
 
   return (
     <>
-      <Dialog onOpenChange={setOpen} open={open}>
-        <DialogContent className="flex h-[70vh] max-w-xl flex-col gap-0 p-0">
-          <DialogHeader className="px-4 pt-4">
-            <DialogTitle>AI Assistant</DialogTitle>
-          </DialogHeader>
+      {open && (
+        <div className="fixed right-4 bottom-20 z-50 w-[min(90vw,28rem)] h-[60vh] max-h-[75vh] md:right-8 md:bottom-24 rounded-lg border bg-card shadow-xl flex flex-col overflow-hidden">
+          <div className="px-4 pt-4">
+            <div className="text-lg font-semibold">AI Assistant</div>
+          </div>
           <div className="mx-4 mb-3 flex min-h-0 flex-1 flex-col overflow-hidden rounded-lg border bg-muted/30">
             <Conversation className="flex-1">
               <ConversationContent className="space-y-3">
@@ -71,12 +65,12 @@ export function FloatingChatLauncher() {
             />
             <Button type="submit">Send</Button>
           </form>
-        </DialogContent>
-      </Dialog>
+        </div>
+      )}
 
       <Button
-        className="fixed right-4 bottom-4 z-50 rounded-full bg-primary p-0 text-secondary shadow-lg hover:bg-primary md:right-6 md:bottom-6"
-        onClick={() => setOpen(true)}
+        className="fixed right-4 bottom-4 z-50 rounded-full bg-primary p-0 text-secondary shadow-lg hover:bg-primary md:right-8 md:bottom-8"
+        onClick={() => setOpen((v) => !v)}
         size="icon-lg"
         type="button"
         variant="default"
