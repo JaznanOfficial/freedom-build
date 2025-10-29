@@ -2,7 +2,6 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
 import { QueryProvider } from "@/components/providers/query-provider";
-import { FloatingChatLauncher } from "@/components/floating-chat-launcher";
 import { Toaster } from "@/components/ui/sonner";
 
 const geistSans = Geist({
@@ -32,7 +31,6 @@ export default function RootLayout({ children }) {
           <QueryProvider>
             {children}
             <Toaster richColors />
-            <FloatingChatLauncher />
           </QueryProvider>
         </body>
       </html>

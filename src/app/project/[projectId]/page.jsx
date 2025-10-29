@@ -1,9 +1,10 @@
 import { LayoutDashboard } from "lucide-react";
 import Link from "next/link";
+import { FloatingChatLauncher } from "@/components/floating-chat-launcher";
+import { GenerationView } from "@/components/projects/GenerationView";
+import { ProjectPageHeader } from "@/components/projects/ProjectPageHeader";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ProjectPageHeader } from "@/components/projects/ProjectPageHeader";
-import { GenerationView } from "@/components/projects/GenerationView";
 
 export default async function Page({ params }) {
   const { projectId } = await params;
@@ -32,11 +33,12 @@ export default async function Page({ params }) {
             <TabsTrigger value="studio">Studio</TabsTrigger>
           </TabsList>
 
-          <TabsContent value="generation" className="mt-3">
+          <TabsContent className="mt-3" value="generation">
             <GenerationView />
+            <FloatingChatLauncher />
           </TabsContent>
-          <TabsContent value="studio" className="mt-3">
-            <div className="text-sm text-muted-foreground">Studio</div>
+          <TabsContent className="mt-3" value="studio">
+            <div className="text-muted-foreground text-sm">Studio</div>
           </TabsContent>
         </Tabs>
       </div>
