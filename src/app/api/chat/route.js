@@ -1,5 +1,5 @@
 import { createOpenRouter } from "@openrouter/ai-sdk-provider";
-import { streamText, convertToModelMessages } from "ai";
+import { convertToModelMessages, streamText } from "ai";
 
 export const runtime = "edge";
 export const maxDuration = 30;
@@ -15,6 +15,8 @@ export async function POST(req) {
   const chatModel = openrouter.chat(modelName);
 
   const result = await streamText({
+    system:
+      "You are a helpful assistant. you're name is Jaznan. you've built by FreedomBuild AI",
     model: chatModel,
     messages: convertToModelMessages(messages || []),
   });

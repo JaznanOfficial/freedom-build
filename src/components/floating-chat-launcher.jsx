@@ -1,16 +1,23 @@
 "use client";
 
+import { useChat } from "@ai-sdk/react";
 import { MessageCircle } from "lucide-react";
 import { useState } from "react";
-import { useChat } from "@ai-sdk/react";
 import {
   Conversation,
   ConversationContent,
   ConversationScrollButton,
 } from "@/components/ai-elements/conversation";
+import { Response } from "@/components/ai-elements/response";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Empty, EmptyHeader, EmptyTitle, EmptyDescription, EmptyMedia } from "@/components/ui/empty";
 import { Button } from "@/components/ui/button";
+import {
+  Empty,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from "@/components/ui/empty";
 import { Input } from "@/components/ui/input";
 
 export function FloatingChatLauncher() {
@@ -62,18 +69,10 @@ export function FloatingChatLauncher() {
                 ) : (
                   messages.map((m) => {
                     const isUser = m.role === "user";
-                    const textParts = Array.isArray(m.parts)
-                      ? m.parts
-                          .filter((p) => p.type === "text")
-                          .map((p) => p.text)
-                          .join("")
-                      : typeof m.content === "string"
-                        ? m.content
-                        : "";
                     return (
                       <div
-                        key={m.id}
                         className={`flex items-end gap-2 ${isUser ? "justify-end" : "justify-start"}`}
+                        key={m.id}
                       >
                         {!isUser && (
                           <Avatar className="size-7">
@@ -91,7 +90,15 @@ export function FloatingChatLauncher() {
                               : "max-w-[80%] rounded-xl bg-muted px-3 py-2"
                           }
                         >
-                          {textParts}
+                          {Array.isArray(m.parts)
+                            ? m.parts
+                                .filter((p) => p.type === "text")
+                                .map((p, i) => (
+                                  <Response key={`${m.id}-${i}`}>{p.text}</Response>
+                                ))
+                            : typeof m.content === "string"
+                              ? m.content
+                              : null}
                         </div>
                         {/* user avatar removed per request */}
                       </div>
