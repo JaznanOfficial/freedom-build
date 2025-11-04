@@ -11,7 +11,7 @@ export function GenerationSceneCard({ scene, className }) {
     <div
       className={cn(
         "flex flex-col gap-3 rounded-lg border border-muted-foreground/40 border-dashed bg-muted/30 p-3",
-        className,
+        className
       )}
     >
       <div className="relative overflow-hidden rounded-md border bg-background">
@@ -25,11 +25,13 @@ export function GenerationSceneCard({ scene, className }) {
           <source src={videoUrl} type="video/mp4" />
         </video>
       </div>
-      <div className="flex items-center justify-between text-sm font-medium">
+      <div className="flex items-center justify-between font-medium text-sm">
         <span>{label}</span>
         <span className="text-muted-foreground text-xs">{duration}</span>
       </div>
-      <p className="text-muted-foreground text-xs leading-relaxed">{description}</p>
+      <p className="text-muted-foreground text-xs leading-relaxed">
+        {description}
+      </p>
     </div>
   );
 }
