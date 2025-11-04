@@ -19,7 +19,6 @@ import {
   EmptyMedia,
   EmptyTitle,
 } from "@/components/ui/empty";
-import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/spinner";
 
 export function GenerationView() {
@@ -130,13 +129,14 @@ export function GenerationView() {
               <ConversationScrollButton />
             </Conversation>
           </div>
-          <form className="flex gap-2" onSubmit={handleSubmit}>
-            <Input
+          <form className="flex items-end gap-2" onSubmit={handleSubmit}>
+            <textarea
+              className="min-h-[6rem] w-full resize-none rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground shadow-xs transition-[color,box-shadow] outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50"
               onChange={(event) => setText(event.target.value)}
               placeholder="Describe your generation"
               value={text}
             />
-            <Button disabled={!text.trim()} type="submit">
+            <Button className="shrink-0" disabled={!text.trim()} type="submit">
               Send
             </Button>
           </form>
