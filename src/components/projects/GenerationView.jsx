@@ -77,9 +77,9 @@ export function GenerationView() {
         <div className="mb-4 md:hidden">
           <Sheet>
             <SheetTrigger asChild>
-              <Button className="w-full justify-start gap-2" variant="outline">
+              <Button className="rounded-full" size="icon" variant="outline">
                 <PanelLeftOpen className="size-4" />
-                <span>Open panel</span>
+                <span className="sr-only">Open panel</span>
               </Button>
             </SheetTrigger>
             <SheetContent className="w-full max-w-sm gap-0 p-0" side="left">
