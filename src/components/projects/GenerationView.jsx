@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport } from "ai";
-import { MessageCircle } from "lucide-react";
+import { MessageCircle, Send } from "lucide-react";
 import {
   Conversation,
   ConversationContent,
@@ -123,15 +123,22 @@ export function GenerationView() {
               <ConversationScrollButton />
             </Conversation>
           </div>
-          <form className="flex items-end gap-2" onSubmit={handleSubmit}>
+          <form className="relative flex" onSubmit={handleSubmit}>
             <textarea
-              className="min-h-[6rem] w-full resize-none rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground shadow-xs transition-[color,box-shadow] outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50"
+              className="min-h-[6rem] w-full resize-none rounded-md border border-input bg-background px-3 py-2 pr-12 text-sm text-foreground shadow-xs transition-[color,box-shadow] outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50"
               onChange={(event) => setText(event.target.value)}
               placeholder="Describe your generation"
               value={text}
             />
-            <Button className="shrink-0" disabled={!text.trim()} type="submit">
-              Send
+            <Button
+              aria-label="Send"
+              className="absolute bottom-2 right-2 h-9 w-9 rounded-full p-0"
+              disabled={!text.trim()}
+              size="icon"
+              type="submit"
+              variant="default"
+            >
+              <Send className="size-4" />
             </Button>
           </form>
         </div>
