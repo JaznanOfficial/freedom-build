@@ -63,12 +63,6 @@ export function GenerationView() {
     <div className="grid h-full min-h-0 flex-1 grid-cols-1 gap-4 md:grid-cols-4">
       <div className="flex h-full flex-col rounded-xl bg-muted/50 p-4 md:col-span-1">
         <div className="flex h-full flex-col gap-4">
-          <div className="space-y-1">
-            <div className="font-semibold text-sm">Prompt to Jaznan</div>
-            <div className="text-muted-foreground text-xs">
-              Describe what you want to generate. Jaznan will craft the right workflow.
-            </div>
-          </div>
           <div className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-lg border bg-background">
             <Conversation className="flex-1">
               <ConversationContent className="space-y-3">
@@ -144,15 +138,9 @@ export function GenerationView() {
       </div>
       <div className="flex h-full flex-col rounded-xl bg-muted/50 p-4 md:col-span-3">
         <div className="flex h-full flex-col gap-4">
-          <div className="space-y-1">
-            <div className="font-semibold text-sm">Generation</div>
-            <div className="text-muted-foreground text-xs">
-              Jaznan streams the latest plan and output for your request.
-            </div>
-          </div>
           <div className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-lg border bg-background">
             <div className="flex items-center justify-between border-b px-4 py-3">
-              <div className="font-medium text-sm">Latest response</div>
+              <div className="font-medium text-sm">Generated scenes</div>
               {isStreaming && <Spinner className="size-4" />}
             </div>
             <div className="flex-1 overflow-auto p-4">
@@ -164,9 +152,9 @@ export function GenerationView() {
                     <EmptyMedia variant="icon">
                       <MessageCircle className="size-6" />
                     </EmptyMedia>
-                    <EmptyTitle>No generation yet</EmptyTitle>
+                    <EmptyTitle>No scenes yet</EmptyTitle>
                     <EmptyDescription>
-                      Send a prompt to see Jaznan build your workflow.
+                      Send a prompt to see Jaznan craft your scenes.
                     </EmptyDescription>
                   </EmptyHeader>
                 </Empty>
