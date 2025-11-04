@@ -21,9 +21,11 @@ export function ProjectPageHeader({ projectId }) {
 
   const name = data?.name || "Project";
   return (
-    <div className="space-y-1 text-center">
-      <h1 className="text-2xl font-semibold tracking-tight">{name}</h1>
-      <p className="text-sm text-muted-foreground">ID: {projectId}</p>
+    <div className="space-y-0.5 text-center">
+      <h1 className="text-lg font-semibold tracking-tight md:text-2xl">
+        {name}
+      </h1>
+      <p className="text-xs text-muted-foreground md:text-sm">ID: {projectId}</p>
     </div>
   );
 }

@@ -72,12 +72,16 @@ export function GenerationView() {
 
   return (
     <div className="flex h-full min-h-0 flex-1 flex-col gap-4 md:grid md:grid-cols-4">
-      <GenerationSidebar className="hidden rounded-xl p-4 md:block" />
+      <GenerationSidebar className="hidden lg:block" />
       <div className="flex h-full min-h-0 flex-col md:col-span-3">
         <div className="mb-4 md:hidden">
           <Sheet>
             <SheetTrigger asChild>
-              <Button className="rounded-full" size="icon" variant="outline">
+              <Button
+                className="rounded-full bg-accent text-accent-foreground hover:bg-accent hover:text-accent-foreground dark:bg-input/50 dark:hover:bg-input/50"
+                size="icon"
+                variant="outline"
+              >
                 <PanelLeftOpen className="size-4" />
                 <span className="sr-only">Open panel</span>
               </Button>

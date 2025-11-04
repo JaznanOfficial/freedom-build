@@ -21,7 +21,7 @@ export default async function Page({ params }) {
           >
             <Link href="/dashboard">
               <LayoutDashboard className="size-4" />
-              <span>Go to dashboard</span>
+              <span>Dashboard</span>
             </Link>
           </Button>
           <ProjectPageHeader projectId={projectId} />
