@@ -58,6 +58,32 @@ export function GenerationView() {
   }, [latestAssistant]);
 
   const isStreaming = status === "streaming";
+  const placeholderScenes = useMemo(
+    () => [
+      {
+        id: "scene-1",
+        label: "Scene 1",
+        duration: "5 seconds",
+        description: "Hero shot introducing the product with bold headline overlay.",
+        videoUrl: "https://storage.googleapis.com/coverr-main/mp4/Mt_Baker.mp4",
+      },
+      {
+        id: "scene-2",
+        label: "Scene 2",
+        duration: "8 seconds",
+        description: "Feature walkthrough highlighting key capabilities with motion graphics.",
+        videoUrl: "https://storage.googleapis.com/coverr-main/mp4/Footboys.mp4",
+      },
+      {
+        id: "scene-3",
+        label: "Scene 3",
+        duration: "10 seconds",
+        description: "Customer testimonial scene with call-to-action transition.",
+        videoUrl: "https://storage.googleapis.com/coverr-main/mp4/Night-Drive.mp4",
+      },
+    ],
+    []
+  );
 
   return (
     <div className="grid h-full min-h-0 flex-1 grid-cols-1 gap-4 md:grid-cols-4">
@@ -154,17 +180,35 @@ export function GenerationView() {
               {latestAssistantText ? (
                 <Response>{latestAssistantText}</Response>
               ) : (
-                <Empty className="border-none p-0">
-                  <EmptyHeader>
-                    <EmptyMedia variant="icon">
-                      <MessageCircle className="size-6" />
-                    </EmptyMedia>
-                    <EmptyTitle>No scenes yet</EmptyTitle>
-                    <EmptyDescription>
-                      Send a prompt to see Jaznan craft your scenes.
-                    </EmptyDescription>
-                  </EmptyHeader>
-                </Empty>
+                <div className="grid gap-3 md:grid-cols-2">
+                  {placeholderScenes.map((scene) => (
+                    <div
+                      className="flex flex-col gap-3 rounded-lg border border-dashed border-muted-foreground/40 bg-muted/30 p-3"
+                      key={scene.id}
+                    >
+                      <div className="relative overflow-hidden rounded-md border bg-background">
+                        <video
+                          className="h-full w-full object-cover"
+                          controls
+                          loop
+                          muted
+                          poster="https://placehold.co/640x360/EEE/AAA?text=Scene+preview"
+                        >
+                          <source src={scene.videoUrl} type="video/mp4" />
+                        </video>
+                      </div>
+                      <div className="flex items-center justify-between text-sm font-medium">
+                        <span>{scene.label}</span>
+                        <span className="text-muted-foreground text-xs">
+                          {scene.duration}
+                        </span>
+                      </div>
+                      <p className="text-muted-foreground text-xs leading-relaxed">
+                        {scene.description}
+                      </p>
+                    </div>
+                  ))}
+                </div>
               )}
             </div>
           </div>
