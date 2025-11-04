@@ -1,12 +1,12 @@
 "use client";
 
-import { useMemo } from "react";
 import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport } from "ai";
+import { useMemo } from "react";
 import { Response } from "@/components/ai-elements/response";
-import { Spinner } from "@/components/ui/spinner";
 import { GenerationSceneGrid } from "@/components/projects/GenerationSceneGrid";
 import { GenerationSidebar } from "@/components/projects/GenerationSidebar";
+import { Spinner } from "@/components/ui/spinner";
 
 export function GenerationView() {
   const { messages, status } = useChat({
@@ -69,9 +69,9 @@ export function GenerationView() {
 
   return (
     <div className="flex h-full min-h-0 flex-1 flex-col gap-4 md:grid md:grid-cols-4">
-      <GenerationSidebar />
-      <div className="flex h-full flex-col rounded-xl bg-muted/50 p-4 md:col-span-3">
-        <div className="flex h-full flex-col gap-4">
+      <GenerationSidebar className="rounded-xl bg-muted/50 p-4" />
+      <div className="flex h-full min-h-0 flex-col rounded-xl bg-muted/50 p-4 md:col-span-3">
+        <div className="flex h-full min-h-0 flex-col gap-4">
           <div className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-lg border bg-background">
             <div className="flex items-center justify-between border-b px-4 py-3">
               <div className="font-medium text-sm">Generated scenes</div>
