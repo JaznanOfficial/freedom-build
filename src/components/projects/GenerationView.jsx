@@ -61,8 +61,8 @@ export function GenerationView() {
   const isStreaming = status === "streaming";
 
   return (
-    <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
-      <div className="rounded-xl bg-muted/50 p-4 md:col-span-1">
+    <div className="grid h-full min-h-0 flex-1 grid-cols-1 gap-4 md:grid-cols-4">
+      <div className="flex h-full flex-col rounded-xl bg-muted/50 p-4 md:col-span-1">
         <div className="flex h-full flex-col gap-4">
           <div className="space-y-1">
             <div className="font-semibold text-sm">Prompt to Jaznan</div>
@@ -142,7 +142,7 @@ export function GenerationView() {
           </form>
         </div>
       </div>
-      <div className="rounded-xl bg-muted/50 p-4 md:col-span-3">
+      <div className="flex h-full flex-col rounded-xl bg-muted/50 p-4 md:col-span-3">
         <div className="flex h-full flex-col gap-4">
           <div className="space-y-1">
             <div className="font-semibold text-sm">Generation</div>

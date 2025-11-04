@@ -10,8 +10,8 @@ export default async function Page({ params }) {
   const { projectId } = await params;
 
   return (
-    <main className="min-h-screen bg-muted/50 p-4 md:p-6">
-      <div className="min-h-[calc(100vh-2rem)] space-y-6 rounded-xl border bg-background p-4 md:min-h-[calc(100vh-3rem)] md:p-6">
+    <main className="flex min-h-screen flex-col bg-muted/50 p-4 md:p-6">
+      <div className="flex flex-1 flex-col gap-6 rounded-xl border bg-background p-4 md:p-6">
         <div>
           <Button
             asChild
@@ -27,13 +27,13 @@ export default async function Page({ params }) {
         </div>
         <ProjectPageHeader projectId={projectId} />
 
-        <Tabs className="w-full" defaultValue="generation">
+        <Tabs className="flex w-full flex-1 flex-col" defaultValue="generation">
           <TabsList>
             <TabsTrigger value="generation">Generation</TabsTrigger>
             <TabsTrigger value="studio">Studio</TabsTrigger>
           </TabsList>
 
-          <TabsContent className="mt-3" value="generation">
+          <TabsContent className="mt-3 flex flex-1 flex-col" value="generation">
             <GenerationView />
             <FloatingChatLauncher />
           </TabsContent>

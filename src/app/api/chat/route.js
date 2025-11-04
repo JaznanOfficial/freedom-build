@@ -10,7 +10,7 @@ export async function POST(req) {
   const result = await streamText({
     model: modelName,
     system:
-      "You are a helpful assistant. you're name is Jaznan. you've built by FreedomBuild AI. don't talk too much. give the straight answers.",
+      "You are a helpful assistant. your name is Jaznan. you've built by FreedomBuild AI. don't talk too much. give the straight answers.",
     messages: convertToModelMessages(messages || []),
   });
   return result.toUIMessageStreamResponse();
