@@ -71,10 +71,10 @@ export function GenerationView() {
   );
 
   return (
-    <div className="flex h-full min-h-0 flex-1 flex-col gap-4 md:grid md:grid-cols-4">
+    <div className="flex h-full min-h-0 flex-1 flex-col gap-4 lg:grid lg:grid-cols-4">
       <GenerationSidebar className="hidden lg:block" />
-      <div className="flex h-full min-h-0 flex-col md:col-span-3">
-        <div className="mb-4 md:hidden">
+      <div className="flex h-full min-h-0 flex-col lg:col-span-3">
+        <div className="mb-4 lg:hidden">
           <Sheet>
             <SheetTrigger asChild>
               <Button
