@@ -2,10 +2,13 @@
 
 import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport } from "ai";
+import { PanelLeftOpen } from "lucide-react";
 import { useMemo } from "react";
 import { Response } from "@/components/ai-elements/response";
 import { GenerationSceneGrid } from "@/components/projects/GenerationSceneGrid";
 import { GenerationSidebar } from "@/components/projects/GenerationSidebar";
+import { Button } from "@/components/ui/button";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Spinner } from "@/components/ui/spinner";
 
 export function GenerationView() {
@@ -69,8 +72,23 @@ export function GenerationView() {
 
   return (
     <div className="flex h-full min-h-0 flex-1 flex-col gap-4 md:grid md:grid-cols-4">
-      <GenerationSidebar />
+      <GenerationSidebar className="hidden rounded-xl p-4 md:block" />
       <div className="flex h-full min-h-0 flex-col md:col-span-3">
+        <div className="mb-4 md:hidden">
+          <Sheet>
+            <SheetTrigger asChild>
+              <Button className="w-full justify-start gap-2" variant="outline">
+                <PanelLeftOpen className="size-4" />
+                <span>Open panel</span>
+              </Button>
+            </SheetTrigger>
+            <SheetContent className="w-full max-w-sm gap-0 p-0" side="left">
+              <div className="h-full overflow-auto">
+                <GenerationSidebar className="p-4" />
+              </div>
+            </SheetContent>
+          </Sheet>
+        </div>
         <div className="flex h-full min-h-0 flex-col gap-4">
           <div className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-lg border bg-background">
             <div className="flex items-center justify-between border-b px-4 py-3">
