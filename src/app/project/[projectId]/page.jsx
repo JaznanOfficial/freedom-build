@@ -10,8 +10,8 @@ export default async function Page({ params }) {
   const { projectId } = await params;
 
   return (
-    <main className="flex min-h-screen flex-col bg-muted/50 p-4 md:p-6">
-      <div className="flex flex-1 flex-col gap-6 rounded-xl border bg-background p-4 md:p-6">
+    <main className="flex h-screen flex-col overflow-hidden bg-muted/50 p-4 md:p-6">
+      <div className="flex flex-1 min-h-0 flex-col gap-6 overflow-hidden rounded-xl border bg-background p-4 md:p-6">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <Button
             asChild
@@ -27,13 +27,13 @@ export default async function Page({ params }) {
           <ProjectPageHeader projectId={projectId} />
         </div>
 
-        <Tabs className="flex w-full flex-1 flex-col" defaultValue="generation">
+        <Tabs className="flex w-full flex-1 min-h-0 flex-col" defaultValue="generation">
           <TabsList>
             <TabsTrigger value="generation">Generation</TabsTrigger>
             <TabsTrigger value="studio">Studio</TabsTrigger>
           </TabsList>
 
-          <TabsContent className="mt-3 flex flex-1 flex-col" value="generation">
+          <TabsContent className="mt-3 flex flex-1 min-h-0 flex-col overflow-hidden" value="generation">
             <GenerationView />
             <FloatingChatLauncher />
           </TabsContent>
