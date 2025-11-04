@@ -69,8 +69,8 @@ export function GenerationView() {
 
   return (
     <div className="flex h-full min-h-0 flex-1 flex-col gap-4 md:grid md:grid-cols-4">
-      <GenerationSidebar className="rounded-xl bg-muted/50 p-4" />
-      <div className="flex h-full min-h-0 flex-col rounded-xl bg-muted/50 p-4 md:col-span-3">
+      <GenerationSidebar />
+      <div className="flex h-full min-h-0 flex-col md:col-span-3">
         <div className="flex h-full min-h-0 flex-col gap-4">
           <div className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-lg border bg-background">
             <div className="flex items-center justify-between border-b px-4 py-3">
