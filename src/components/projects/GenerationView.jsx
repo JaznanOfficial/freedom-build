@@ -82,7 +82,11 @@ export function GenerationView() {
                 <span className="sr-only">Open panel</span>
               </Button>
             </SheetTrigger>
-            <SheetContent className="w-full max-w-sm gap-0 p-0" side="left">
+            <SheetContent
+              className="w-full max-w-sm gap-0 p-0"
+              hideClose
+              side="left"
+            >
               <div className="h-full overflow-auto">
                 <GenerationSidebar className="p-4" />
               </div>
