@@ -2,40 +2,14 @@
 
 import { PanelLeftOpen } from "lucide-react";
 import { useMemo } from "react";
-import { Response } from "@/components/ai-elements/response";
 import { GenerationSceneGrid } from "@/components/projects/GenerationSceneGrid";
 import { GenerationSidebar } from "@/components/projects/GenerationSidebar";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Spinner } from "@/components/ui/spinner";
 import { useProjectChat } from "@/components/projects/ChatProvider";
 
 export function GenerationView() {
-  const { messages, status } = useProjectChat();
-
-  const latestAssistant = useMemo(() => {
-    for (let i = messages.length - 1; i >= 0; i -= 1) {
-      if (messages[i]?.role === "assistant") {
-        return messages[i];
-      }
-    }
-    return null;
-  }, [messages]);
-
-  const latestAssistantText = useMemo(() => {
-    if (!latestAssistant) return null;
-    if (Array.isArray(latestAssistant.parts)) {
-      return latestAssistant.parts
-        .filter((part) => part.type === "text")
-        .map((part) => part.text)
-        .join("");
-    }
-    return typeof latestAssistant.content === "string"
-      ? latestAssistant.content
-      : null;
-  }, [latestAssistant]);
-
-  const isStreaming = status === "streaming";
+  useProjectChat();
   const placeholderScenes = useMemo(
     () => [
       {
@@ -98,14 +72,9 @@ export function GenerationView() {
           <div className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-lg border bg-background">
             <div className="flex items-center justify-between border-b px-4 py-3">
               <div className="font-medium text-sm">Generated scenes</div>
-              {isStreaming && <Spinner className="size-4" />}
             </div>
             <div className="flex-1 overflow-auto p-4">
-              {latestAssistantText ? (
-                <Response>{latestAssistantText}</Response>
-              ) : (
-                <GenerationSceneGrid scenes={placeholderScenes} />
-              )}
+              <GenerationSceneGrid scenes={placeholderScenes} />
             </div>
           </div>
         </div>

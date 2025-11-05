@@ -5,7 +5,6 @@ import { Paperclip, Send, Settings } from "lucide-react";
 
 import { Response } from "@/components/ai-elements/response";
 import { Button } from "@/components/ui/button";
-import { Spinner } from "@/components/ui/spinner";
 import { useProjectChat } from "@/components/projects/ChatProvider";
 import { cn } from "@/lib/utils";
 
@@ -45,14 +44,12 @@ export function GenerationSidebar({ className }) {
             <span className="font-medium text-foreground text-sm">
               Conversation
             </span>
-            {isStreaming && <Spinner className="size-4 text-muted-foreground" />}
           </div>
           <div className="flex-1 space-y-3 overflow-auto p-3 text-sm">
             {messages.length === 0 ? (
               <div className="flex justify-start">
                 <div className="max-w-[85%] rounded-lg bg-muted px-3 py-2 text-muted-foreground">
-                  Start ideating scenes here. This area will display the latest
-                  chat updates.
+                  Start ideating scenes here. This area will display the latest chat updates.
                 </div>
               </div>
             ) : (
@@ -80,6 +77,26 @@ export function GenerationSidebar({ className }) {
                 );
               })
             )}
+            {isStreaming && (
+              <div className="flex justify-start" key="typing-indicator">
+                <div className="max-w-[85%] rounded-lg bg-muted px-3 py-2">
+                  <div className="flex items-center gap-1">
+                    <span
+                      className="animate-bounce bg-muted-foreground inline-block rounded-full size-2"
+                      style={{ animationDelay: "0ms" }}
+                    />
+                    <span
+                      className="animate-bounce bg-muted-foreground inline-block rounded-full size-2"
+                      style={{ animationDelay: "120ms" }}
+                    />
+                    <span
+                      className="animate-bounce bg-muted-foreground inline-block rounded-full size-2"
+                      style={{ animationDelay: "240ms" }}
+                    />
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         </div>
         <div className="flex items-start gap-2 rounded-lg border bg-background p-3 shadow-xs">
@@ -87,7 +104,7 @@ export function GenerationSidebar({ className }) {
             className="min-h-[120px] w-full resize-none border-0 bg-transparent text-foreground text-sm outline-none placeholder:text-muted-foreground focus-visible:outline-none"
             onChange={(event) => setText(event.target.value)}
             onKeyDown={(event) => {
-              if (event.key === "Enter" && (event.metaKey || event.ctrlKey)) {
+              if (event.key === "Enter") {
                 event.preventDefault();
                 handleSend();
               }
