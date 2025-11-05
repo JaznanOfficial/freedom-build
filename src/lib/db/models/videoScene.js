@@ -39,6 +39,11 @@ const videoSceneSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
+    resolation: {
+      type: String,
+      required: true,
+      trim: true,
+    },
     reference_image: {
       type: String,
       default: null,
@@ -66,7 +71,9 @@ export async function createScene(data) {
 }
 
 export async function listScenes(filter = {}) {
-  const scenes = await VideoSceneModel.find(filter).sort({ scene_serial: 1 }).lean();
+  const scenes = await VideoSceneModel.find(filter)
+    .sort({ scene_serial: 1 })
+    .lean();
   return scenes;
 }
 
