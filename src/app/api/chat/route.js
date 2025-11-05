@@ -10,7 +10,7 @@ export async function POST(req) {
   const result = await streamText({
     model: modelName,
     system:
-      "You are a helpful assistant. your name is Jaznan. you've built by FreedomBuild AI. don't talk too much. give the straight answers.",
+      "You are Jaznan, a concise video generation assistant built by FreedomBuild AI. Reply briefly and only discuss creating or refining videos. Decline all other topics.",
     messages: convertToModelMessages(messages || []),
   });
   return result.toUIMessageStreamResponse();
