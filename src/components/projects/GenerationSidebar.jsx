@@ -7,6 +7,7 @@ import { Response } from "@/components/ai-elements/response";
 import { Button } from "@/components/ui/button";
 import { useProjectChat } from "@/components/projects/ChatProvider";
 import { cn } from "@/lib/utils";
+import { StickToBottom } from "use-stick-to-bottom";
 
 export function GenerationSidebar({ className }) {
   const { messages, sendMessage, status } = useProjectChat();
@@ -45,59 +46,65 @@ export function GenerationSidebar({ className }) {
               Conversation
             </span>
           </div>
-          <div className="flex-1 space-y-3 overflow-auto p-3 text-sm">
-            {messages.length === 0 ? (
-              <div className="flex justify-start">
-                <div className="max-w-[85%] rounded-lg bg-muted px-3 py-2 text-muted-foreground">
-                  Start ideating scenes here. This area will display the latest chat updates.
+          <StickToBottom
+            className="flex-1 overflow-y-auto"
+            initial="smooth"
+            resize="smooth"
+          >
+            <StickToBottom.Content className="space-y-3 p-3 text-sm">
+              {messages.length === 0 ? (
+                <div className="flex justify-start">
+                  <div className="max-w-[85%] rounded-lg bg-muted px-3 py-2 text-muted-foreground">
+                    Start ideating scenes here. This area will display the latest chat updates.
+                  </div>
                 </div>
-              </div>
-            ) : (
-              messages.map((message) => {
-                const isUser = message.role === "user";
-                const textContent = getMessageText(message);
-                if (!textContent) {
-                  return null;
-                }
-                return (
-                  <div
-                    className={`flex ${isUser ? "justify-end" : "justify-start"}`}
-                    key={message.id}
-                  >
+              ) : (
+                messages.map((message) => {
+                  const isUser = message.role === "user";
+                  const textContent = getMessageText(message);
+                  if (!textContent) {
+                    return null;
+                  }
+                  return (
                     <div
-                      className={
-                        isUser
-                          ? "max-w-[85%] whitespace-pre-wrap rounded-lg bg-primary/10 px-3 py-2 text-primary"
-                          : "max-w-[85%] whitespace-pre-wrap rounded-lg bg-muted px-3 py-2"
-                      }
+                      className={`flex ${isUser ? "justify-end" : "justify-start"}`}
+                      key={message.id}
                     >
-                      {isUser ? textContent : <Response>{textContent}</Response>}
+                      <div
+                        className={
+                          isUser
+                            ? "max-w-[85%] whitespace-pre-wrap rounded-lg bg-primary/10 px-3 py-2 text-primary"
+                            : "max-w-[85%] whitespace-pre-wrap rounded-lg bg-muted px-3 py-2"
+                        }
+                      >
+                        {isUser ? textContent : <Response>{textContent}</Response>}
+                      </div>
+                    </div>
+                  );
+                })
+              )}
+              {isStreaming && (
+                <div className="flex justify-start" key="typing-indicator">
+                  <div className="max-w-[85%] rounded-lg bg-muted px-3 py-2">
+                    <div className="flex items-center gap-1">
+                      <span
+                        className="animate-bounce bg-muted-foreground inline-block rounded-full size-2"
+                        style={{ animationDelay: "0ms" }}
+                      />
+                      <span
+                        className="animate-bounce bg-muted-foreground inline-block rounded-full size-2"
+                        style={{ animationDelay: "120ms" }}
+                      />
+                      <span
+                        className="animate-bounce bg-muted-foreground inline-block rounded-full size-2"
+                        style={{ animationDelay: "240ms" }}
+                      />
                     </div>
                   </div>
-                );
-              })
-            )}
-            {isStreaming && (
-              <div className="flex justify-start" key="typing-indicator">
-                <div className="max-w-[85%] rounded-lg bg-muted px-3 py-2">
-                  <div className="flex items-center gap-1">
-                    <span
-                      className="animate-bounce bg-muted-foreground inline-block rounded-full size-2"
-                      style={{ animationDelay: "0ms" }}
-                    />
-                    <span
-                      className="animate-bounce bg-muted-foreground inline-block rounded-full size-2"
-                      style={{ animationDelay: "120ms" }}
-                    />
-                    <span
-                      className="animate-bounce bg-muted-foreground inline-block rounded-full size-2"
-                      style={{ animationDelay: "240ms" }}
-                    />
-                  </div>
                 </div>
-              </div>
-            )}
-          </div>
+              )}
+            </StickToBottom.Content>
+          </StickToBottom>
         </div>
         <div className="flex items-start gap-2 rounded-lg border bg-background p-3 shadow-xs">
           <textarea
