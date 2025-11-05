@@ -1,7 +1,5 @@
 "use client";
 
-import { useChat } from "@ai-sdk/react";
-import { DefaultChatTransport } from "ai";
 import { PanelLeftOpen } from "lucide-react";
 import { useMemo } from "react";
 import { Response } from "@/components/ai-elements/response";
@@ -10,11 +8,10 @@ import { GenerationSidebar } from "@/components/projects/GenerationSidebar";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Spinner } from "@/components/ui/spinner";
+import { useProjectChat } from "@/components/projects/ChatProvider";
 
 export function GenerationView() {
-  const { messages, status } = useChat({
-    transport: new DefaultChatTransport({ api: "/api/chat" }),
-  });
+  const { messages, status } = useProjectChat();
 
   const latestAssistant = useMemo(() => {
     for (let i = messages.length - 1; i >= 0; i -= 1) {

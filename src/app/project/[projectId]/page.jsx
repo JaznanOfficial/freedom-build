@@ -1,8 +1,8 @@
 import { LayoutDashboard } from "lucide-react";
 import Link from "next/link";
 import { GenerationView } from "@/components/projects/GenerationView";
-import { FloatingChatLauncher } from "@/components/floating-chat-launcher";
 import { ProjectPageHeader } from "@/components/projects/ProjectPageHeader";
+import { ChatProvider } from "@/components/projects/ChatProvider";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
@@ -40,8 +40,9 @@ export default async function Page({ params }) {
             className="mt-3 flex min-h-0 flex-1 flex-col overflow-hidden"
             value="generation"
           >
-            <GenerationView />
-            <FloatingChatLauncher />
+            <ChatProvider>
+              <GenerationView />
+            </ChatProvider>
           </TabsContent>
           <TabsContent className="mt-3" value="studio">
             <div className="text-muted-foreground text-sm">Studio</div>
