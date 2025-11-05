@@ -20,6 +20,7 @@ import {
   EmptyTitle,
 } from "@/components/ui/empty";
 import { Input } from "@/components/ui/input";
+import { Spinner } from "@/components/ui/spinner";
 
 export function FloatingChatLauncher() {
   const [open, setOpen] = useState(false);
@@ -28,10 +29,16 @@ export function FloatingChatLauncher() {
     transport: new DefaultChatTransport({ api: "/api/chat" }),
   });
 
+  const trimmedText = text.trim();
+  const isStreaming = status === "streaming";
+  const canSend = trimmedText.length > 0 && !isStreaming;
+
   function handleSend(e) {
     e.preventDefault();
     const value = text.trim();
-    if (!value) return;
+    if (!value) {
+      return;
+    }
     sendMessage({ parts: [{ type: "text", text: value }] });
     setText("");
   }
@@ -50,11 +57,14 @@ export function FloatingChatLauncher() {
                 <AvatarFallback>JZ</AvatarFallback>
               </Avatar>
               <span
-                aria-label="Online"
+                aria-hidden="true"
                 className="-bottom-0 -right-0 absolute block size-2.5 rounded-full bg-green-500 ring-2 ring-card"
               />
             </div>
-            <div className="font-semibold text-lg">Jaznan</div>
+            <div className="flex items-center gap-2">
+              <div className="font-semibold text-lg">Jaznan</div>
+              {isStreaming && <Spinner className="size-4 text-muted-foreground" />}
+            </div>
           </div>
           <div className="mx-4 mb-3 flex min-h-0 flex-1 flex-col overflow-hidden rounded-lg border bg-muted/30">
             <Conversation className="flex-1">
@@ -93,16 +103,19 @@ export function FloatingChatLauncher() {
                               : "max-w-[80%] whitespace-pre-wrap rounded-xl bg-muted px-3 py-2"
                           }
                         >
-                          {Array.isArray(m.parts) ? (
-                            <Response key={m.id}>
-                              {m.parts
+                          {(() => {
+                            if (Array.isArray(m.parts)) {
+                              const textContent = m.parts
                                 .filter((p) => p.type === "text")
                                 .map((p) => p.text)
-                                .join("")}
-                            </Response>
-                          ) : typeof m.content === "string" ? (
-                            m.content
-                          ) : null}
+                                .join("");
+                              return <Response>{textContent}</Response>;
+                            }
+                            if (typeof m.content === "string") {
+                              return m.content;
+                            }
+                            return null;
+                          })()}
                         </div>
                         {/* user avatar removed per request */}
                       </div>
@@ -115,11 +128,14 @@ export function FloatingChatLauncher() {
           </div>
           <form className="flex gap-2 px-4 pb-4" onSubmit={handleSend}>
             <Input
+              disabled={isStreaming}
               onChange={(e) => setText(e.target.value)}
-              placeholder="Type a message"
+              placeholder={isStreaming ? "Generating..." : "Type a message"}
               value={text}
             />
-            <Button type="submit">Send</Button>
+            <Button disabled={!canSend} type="submit">
+              {isStreaming ? <Spinner className="size-4" /> : "Send"}
+            </Button>
           </form>
         </div>
       )}

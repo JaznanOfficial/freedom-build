@@ -1,6 +1,7 @@
 import { LayoutDashboard } from "lucide-react";
 import Link from "next/link";
 import { GenerationView } from "@/components/projects/GenerationView";
+import { FloatingChatLauncher } from "@/components/floating-chat-launcher";
 import { ProjectPageHeader } from "@/components/projects/ProjectPageHeader";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -10,7 +11,7 @@ export default async function Page({ params }) {
 
   return (
     <main className="flex h-screen flex-col overflow-hidden bg-muted/50 p-4 md:p-6">
-      <div className="flex min-h-0 flex-1 flex-col gap-6 overflow-hidden rounded-xl border bg-background p-4 md:p-6">
+      <div className="flex min-h-0 flex-1 flex-col gap-2 overflow-hidden rounded-xl border bg-background p-4 md:p-6">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <Button
             asChild
@@ -40,7 +41,7 @@ export default async function Page({ params }) {
             value="generation"
           >
             <GenerationView />
-            {/* <FloatingChatLauncher /> */}
+            <FloatingChatLauncher />
           </TabsContent>
           <TabsContent className="mt-3" value="studio">
             <div className="text-muted-foreground text-sm">Studio</div>

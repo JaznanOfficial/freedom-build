@@ -1,6 +1,6 @@
 "use client";
 
-import { Send } from "lucide-react";
+import { Paperclip, Send, Settings } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -35,9 +35,17 @@ export function GenerationSidebar({ className }) {
             placeholder="Describe the next scene..."
             rows={3}
           />
-          <Button className="shrink-0" size="icon" type="button">
-            <Send className="size-4" />
-          </Button>
+          <div className="flex shrink-0 flex-col gap-2">
+            <Button className="shrink-0" size="icon" type="button">
+              <Send className="size-4" />
+            </Button>
+            <Button className="shrink-0" size="icon" type="button">
+              <Paperclip className="size-4" />
+            </Button>
+            <Button className="shrink-0" size="icon" type="button">
+              <Settings className="size-4" />
+            </Button>
+          </div>
         </div>
       </div>
     </aside>
