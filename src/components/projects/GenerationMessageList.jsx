@@ -5,7 +5,7 @@ import { GenerationSceneList } from "./GenerationSceneList";
 
 const GENERATE_SCENES_TOOL_NAME = "generateScenes";
 const SCENE_TOOL_PART_TYPE = `tool-${GENERATE_SCENES_TOOL_NAME}`;
-const DEFAULT_SCENE_STATUS_MESSAGE = "I'm generating your video scenes now.";
+const DEFAULT_SCENE_STATUS_MESSAGE = "Jaznan is generating your videos. Hold tight and enjoy...";
 
 function extractTextContent(message) {
   if (Array.isArray(message.parts)) {

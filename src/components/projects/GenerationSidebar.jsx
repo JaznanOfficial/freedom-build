@@ -2,7 +2,7 @@
 
 import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport } from "ai";
-import { Paperclip, Send, Settings } from "lucide-react";
+import { Mic, Paperclip, Send, Settings } from "lucide-react";
 import { useState } from "react";
 import { StickToBottom } from "use-stick-to-bottom";
 import { Button } from "@/components/ui/button";
@@ -52,22 +52,10 @@ export function GenerationSidebar({ className }) {
                 <GenerationMessageList messages={messages} />
               )}
               {isStreaming && (
-                <div className="flex justify-start" key="typing-indicator">
-                  <div className="max-w-[85%] rounded-lg bg-muted px-3 py-2">
-                    <div className="flex items-center gap-1">
-                      <span
-                        className="inline-block size-2 animate-bounce rounded-full bg-muted-foreground"
-                        style={{ animationDelay: "0ms" }}
-                      />
-                      <span
-                        className="inline-block size-2 animate-bounce rounded-full bg-muted-foreground"
-                        style={{ animationDelay: "120ms" }}
-                      />
-                      <span
-                        className="inline-block size-2 animate-bounce rounded-full bg-muted-foreground"
-                        style={{ animationDelay: "240ms" }}
-                      />
-                    </div>
+                <div className="flex justify-start" key="thinking-indicator">
+                  <div className="flex items-center gap-2 rounded-full bg-primary/10 px-4 py-2 text-primary text-sm shadow-sm">
+                    <Mic className="size-4 animate-pulse" />
+                    <span className="font-medium">Jaznan is thinking...</span>
                   </div>
                 </div>
               )}
