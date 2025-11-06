@@ -3,8 +3,6 @@
 import { Response } from "@/components/ai-elements/response";
 import { GenerationSceneList } from "./GenerationSceneList";
 
-const GENERATE_SCENES_TOOL_NAME = "generateScenes";
-
 function extractTextContent(message) {
   if (Array.isArray(message.parts)) {
     return message.parts
@@ -20,78 +18,81 @@ function extractTextContent(message) {
   return "";
 }
 
-function parseScenesFromPayload(payload) {
-  if (!payload) {
+function isSceneArray(value) {
+  if (!Array.isArray(value) || value.length === 0) {
+    return false;
+  }
+
+  return value.every((item) => item && typeof item === "object" && "scene_serial" in item && "prompt" in item);
+}
+
+function tryParseJSON(text) {
+  const trimmed = text.trim();
+  const firstChar = trimmed[0];
+  if (firstChar !== "{" && firstChar !== "[") {
     return null;
   }
 
-  let current = payload;
-
-  while (current && typeof current === "object" && ("output" in current || "result" in current)) {
-    current = current.output ?? current.result;
+  try {
+    return JSON.parse(trimmed);
+  } catch {
+    return null;
   }
-
-  if (Array.isArray(current)) {
-    return current;
-  }
-
-  if (Array.isArray(current?.scenes)) {
-    return current.scenes;
-  }
-
-  if (typeof current === "string") {
-    try {
-      const parsed = JSON.parse(current);
-      if (Array.isArray(parsed)) {
-        return parsed;
-      }
-      if (Array.isArray(parsed?.scenes)) {
-        return parsed.scenes;
-      }
-    } catch {
-      return null;
-    }
-  }
-
-  return null;
 }
 
-function gatherFromToolInvocations(toolInvocations) {
-  if (!Array.isArray(toolInvocations)) {
-    return [];
-  }
-
-  return toolInvocations
-    .filter((invocation) => invocation?.toolName === GENERATE_SCENES_TOOL_NAME)
-    .filter((invocation) => !invocation?.state || invocation.state === "result")
-    .map((invocation) => invocation.result ?? invocation.output ?? invocation.data ?? invocation);
-}
-
-function gatherFromToolParts(parts) {
-  if (!Array.isArray(parts)) {
-    return [];
-  }
-
-  return parts
-    .filter((part) => part?.type === "tool-result" && part?.toolName === GENERATE_SCENES_TOOL_NAME)
-    .map((part) => part.result ?? part.output ?? part.data ?? part.content ?? part);
-}
-
-function gatherInvocationPayloads(message) {
-  return [...gatherFromToolInvocations(message.toolInvocations), ...gatherFromToolParts(message.parts)];
-}
-
-function extractScenes(message) {
-  const payloads = gatherInvocationPayloads(message);
-
-  for (const payload of payloads) {
-    const scenes = parseScenesFromPayload(payload);
-    if (Array.isArray(scenes) && scenes.length > 0) {
+function scanObjectValues(objectValue, seen) {
+  for (const key of Object.keys(objectValue)) {
+    const scenes = findScenesDeep(objectValue[key], seen);
+    if (scenes) {
       return scenes;
     }
   }
 
   return null;
+}
+
+function findScenesDeep(value, seen = new Set()) {
+  if (value == null) {
+    return null;
+  }
+
+  if (typeof value === "string") {
+    const parsed = tryParseJSON(value);
+    return parsed ? findScenesDeep(parsed, seen) : null;
+  }
+
+  if (typeof value !== "object") {
+    return null;
+  }
+
+  if (seen.has(value)) {
+    return null;
+  }
+  seen.add(value);
+
+  if (isSceneArray(value)) {
+    return value;
+  }
+
+  if (Array.isArray(value)) {
+    for (const item of value) {
+      const scenes = findScenesDeep(item, seen);
+      if (scenes) {
+        return scenes;
+      }
+    }
+    return null;
+  }
+
+  if (Array.isArray(value.scenes)) {
+    return value.scenes;
+  }
+
+  return scanObjectValues(value, seen);
+}
+
+function extractScenes(message) {
+  return findScenesDeep(message);
 }
 
 function buildSceneBubble(messageId, scenes) {
