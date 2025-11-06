@@ -3,6 +3,10 @@
 import { Response } from "@/components/ai-elements/response";
 import { GenerationSceneList } from "./GenerationSceneList";
 
+const GENERATE_SCENES_TOOL_NAME = "generateScenes";
+const SCENE_TOOL_PART_TYPE = `tool-${GENERATE_SCENES_TOOL_NAME}`;
+const DEFAULT_SCENE_STATUS_MESSAGE = "I'm generating your video scenes now.";
+
 function extractTextContent(message) {
   if (Array.isArray(message.parts)) {
     return message.parts
@@ -118,6 +122,66 @@ function buildTextBubble(messageId, content, isUser) {
   );
 }
 
+function partsIncludeSceneTool(parts) {
+  if (!Array.isArray(parts)) {
+    return false;
+  }
+
+  for (const part of parts) {
+    if (!part) {
+      continue;
+    }
+
+    if (
+      part.type === SCENE_TOOL_PART_TYPE ||
+      ((part.type === "tool-call" || part.type === "tool-result" || part.type === "tool-error") &&
+        part.toolName === GENERATE_SCENES_TOOL_NAME)
+    ) {
+      return true;
+    }
+
+    if (Array.isArray(part.parts) && partsIncludeSceneTool(part.parts)) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+function hasSceneToolActivity(message) {
+  if (!message || message.role !== "assistant") {
+    return false;
+  }
+
+  if (partsIncludeSceneTool(message.parts)) {
+    return true;
+  }
+
+  if (partsIncludeSceneTool(message.content)) {
+    return true;
+  }
+
+  if (Array.isArray(message.toolInvocations)) {
+    return message.toolInvocations.some(
+      (invocation) => invocation?.toolName === GENERATE_SCENES_TOOL_NAME,
+    );
+  }
+
+  return false;
+}
+
+function resolveAssistantContent({ isUser, content, scenes, sceneToolActive }) {
+  if (isUser || content) {
+    return content;
+  }
+
+  if (sceneToolActive || Boolean(scenes?.length)) {
+    return DEFAULT_SCENE_STATUS_MESSAGE;
+  }
+
+  return content;
+}
+
 export function GenerationMessageList({ messages }) {
   if (!Array.isArray(messages) || messages.length === 0) {
     return null;
@@ -127,16 +191,18 @@ export function GenerationMessageList({ messages }) {
     const isUser = message.role === "user";
     const bubbles = [];
 
-    if (!isUser) {
-      const scenes = extractScenes(message);
-      if (scenes) {
-        bubbles.push(buildSceneBubble(message.id, scenes));
-      }
-    }
+    let content = extractTextContent(message);
+    const scenes = isUser ? null : extractScenes(message);
+    const sceneToolActive = isUser ? false : hasSceneToolActivity(message);
 
-    const content = extractTextContent(message);
+    content = resolveAssistantContent({ isUser, content, scenes, sceneToolActive });
+
     if (content) {
       bubbles.push(buildTextBubble(message.id, content, isUser));
+    }
+
+    if (!isUser && scenes) {
+      bubbles.push(buildSceneBubble(message.id, scenes));
     }
 
     return bubbles;
