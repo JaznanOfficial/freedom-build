@@ -6,7 +6,9 @@ export const sceneSchema = z.object({
     z.object({
       scene_serial: z.number().int().min(),
       prompt: z.string().min(4),
-      duration: z.enum([4, 6, 8]),
+      duration: z.number().int().refine((value) => value === 4 || value === 6 || value === 8, {
+        message: "Duration must be 4, 6, or 8 seconds.",
+      }),
       aspect_ratio: z.enum(["16:9", "9:16"]).default("16:9"),
       resolution: z.enum(["720p", "1080p"]).default("720p"),
       status: z
