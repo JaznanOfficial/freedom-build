@@ -1,28 +1,28 @@
 "use client";
 
-import { useChat } from "@ai-sdk/react";
-import { DefaultChatTransport } from "ai";
 import { Mic, Paperclip, Send, Settings } from "lucide-react";
 import { useState } from "react";
 import { StickToBottom } from "use-stick-to-bottom";
+import { useProjectChat } from "@/components/projects/ChatProvider";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { GenerationMessageList } from "./GenerationMessageList";
 
+const STREAMING_STATUS = "streaming";
+
 export function GenerationSidebar({ className }) {
   const [input, setInput] = useState("");
-  const { messages, sendMessage, status } = useChat({
-    transport: new DefaultChatTransport({ api: "/api/chat" }),
-  });
+  const { messages, sendMessage, status } = useProjectChat();
 
-  const isStreaming = status === "streaming";
+  const isStreaming = status === STREAMING_STATUS;
+  const statusLabel = isStreaming ? "Jaznan is generating..." : "Jaznan is ready.";
 
   const handleSubmit = () => {
     const trimmed = input.trim();
     if (!trimmed || isStreaming) {
       return;
     }
-    sendMessage({ parts: [{ type: "text", text: trimmed }] });
+    sendMessage(trimmed);
     setInput("");
   };
 
@@ -55,7 +55,7 @@ export function GenerationSidebar({ className }) {
                 <div className="flex justify-start" key="thinking-indicator">
                   <div className="flex items-center gap-2 rounded-full bg-primary/10 px-4 py-2 text-primary text-sm shadow-sm">
                     <Mic className="size-4 animate-pulse" />
-                    <span className="font-medium">Jaznan is thinking...</span>
+                    <span className="font-medium">{statusLabel}</span>
                   </div>
                 </div>
               )}

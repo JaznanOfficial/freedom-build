@@ -30,12 +30,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import {
-  useCreateProject,
-  useDeleteProject,
-  useProjects,
-  useUpdateProject,
-} from "@/hooks/queries/projects";
+import { useProjectStore } from "@/components/projects/ProjectStoreProvider";
 
 const secondaryNavItems = [
   {
@@ -66,21 +61,18 @@ export function AppSidebar({ ...props }) {
   const [editName, setEditName] = useState("");
 
   const {
-    data,
-    isLoading: projectsLoading,
-    isFetchingNextPage,
-    hasNextPage,
-    fetchNextPage,
-  } = useProjects();
+    projects,
+    createProject,
+    deleteProject,
+    updateProject,
+  } = useProjectStore();
+  const projectsLoading = false;
+  const isFetchingNextPage = false;
+  const hasNextPage = false;
 
-  const projects = data?.pages.flatMap((page) => page?.data ?? []) ?? [];
-
-  const { mutateAsync: createProject, isPending: isCreating } =
-    useCreateProject();
-  const { mutateAsync: deleteProject, isPending: isDeleting } =
-    useDeleteProject();
-  const { mutateAsync: updateProject, isPending: isUpdating } =
-    useUpdateProject();
+  const [isCreating, setIsCreating] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [isUpdating, setIsUpdating] = useState(false);
 
   const handleDialogChange = (open) => {
     setDialogOpen(open);
@@ -97,16 +89,27 @@ export function AppSidebar({ ...props }) {
 
   const handleEditSubmit = async (event) => {
     event.preventDefault();
-    const trimmed = editName.trim();
-    if (!projectPendingEdit?.id || !trimmed) {
+
+    if (!projectPendingEdit?.id) {
       toast.error("Project name is required");
       return;
     }
+
+    const trimmed = editName.trim();
+    if (!trimmed) {
+      toast.error("Project name is required");
+      return;
+    }
+
     try {
-      await updateProject({ id: projectPendingEdit.id, name: trimmed });
+      setIsUpdating(true);
+      await updateProject(projectPendingEdit.id, trimmed);
       handleEditDialogChange(false);
+      toast.success("Project updated successfully");
     } catch (_error) {
-      // toast handled in hook
+      toast.error("Failed to update project");
+    } finally {
+      setIsUpdating(false);
     }
   };
 
@@ -135,14 +138,18 @@ export function AppSidebar({ ...props }) {
     }
 
     try {
-      const created = await createProject({ name: trimmedName });
+      setIsCreating(true);
+      const created = await createProject(trimmedName);
+      toast.success("Project created successfully");
       setProjectName("");
       handleDialogChange(false);
       if (created?.id) {
         router.push(`/project/${created.id}`);
       }
     } catch (_error) {
-      // Error toast handled in mutation hook
+      toast.error("Failed to create project");
+    } finally {
+      setIsCreating(false);
     }
   };
 
@@ -157,10 +164,14 @@ export function AppSidebar({ ...props }) {
     }
 
     try {
+      setIsDeleting(true);
       await deleteProject(projectPendingDeletion.id);
       handleDeleteDialogChange(false);
+      toast.success("Project deleted successfully");
     } catch (_error) {
-      // Error toast handled in mutation hook
+      toast.error("Failed to delete project");
+    } finally {
+      setIsDeleting(false);
     }
   };
 
@@ -230,11 +241,11 @@ export function AppSidebar({ ...props }) {
           {projectsLoading ? (
             <NavProjectsSkeleton />
           ) : (
-            <div className="h-full overflow-auto pr-1 scrollbar-thin">
+            <div className="h-full overflow-auto scrollbar-thin pr-1">
               <NavProjects
                 hasMore={Boolean(hasNextPage)}
                 isLoadingMore={isFetchingNextPage}
-                onLoadMore={() => fetchNextPage()}
+                onLoadMore={() => {}}
                 onRequestEdit={handleRequestEdit}
                 onRequestDelete={handleRequestDelete}
                 projects={projects}
